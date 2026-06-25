@@ -1,0 +1,30 @@
+.board {
+  border: 1px solid black;
+  width: fit-content;
+  justify-self: center;
+}
+
+.row {
+  display: flex;
+  justify-self: center;
+
+}
+
+.piece {
+  height: 100%;
+  width: 80%;
+}
+
+.light {
+  background-color: rgba(226, 217, 217, 0.993);
+}
+
+.dark {
+  background-color: rgb(185, 154, 49);
+}
+
+.square {
+  height: 4rem;
+  width: 4rem;
+  display: block;
+}

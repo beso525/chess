@@ -1,0 +1,20 @@
+<div class="board">
+  @for (row of squares(); track $index; let r = $index) 
+  {
+    <div class="row">
+      @for (cell of row; track $index; let f = $index) 
+      {
+        <div 
+          class="square" 
+          [class.light]="(r + f) % 2 === 0" 
+          [class.dark]="(r + f) % 2 !== 0" 
+          [class.selected]="isSelected(r,f)"
+          (click)="onSquareClick(r, f)">
+          @if(cell) {
+            <img [src]="'../assets/' + cell + '.svg'" [alt]="cell" class="piece" />
+          }
+        </div>
+      }
+    </div>
+  }
+</div> 
