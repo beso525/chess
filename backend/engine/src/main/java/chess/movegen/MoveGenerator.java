@@ -90,8 +90,42 @@ public class MoveGenerator {
             knightMoves.add(new Move(
                     new Position(pos.row, pos.col),
                     new Position(toRow, toCol)));
-        };
+        }
         return knightMoves;
+    }
+
+    private List<Move> genPawnMoves(Position pos, Board board) {
+
+        // check if pawn has moved
+        // if first move - can move twice
+        // if later, then can move only forward, unless theres an enemy piece either 
+        // in square[+1][+1] or square[-1][-1]
+        ArrayList<Move> pawnMoves = new ArrayList<>();
+        char color = board.getPiece(pos.row, pos.col).charAt(0);
+
+        //
+        int[][] potentialMoves = {
+            {-1, -1}, {1, 1}, {0, 1}
+        };
+
+        for (int[] moveKnight : potentialMoves) {
+            int toRow = pos.row + moveKnight[0];
+            int toCol = pos.col + moveKnight[1];
+
+            if (toRow < 0 || toRow > 7 || toCol < 0 || toCol > 7) {
+                continue;
+            }
+
+            if (!board.isEmpty(toRow, toCol) && !board.isEnemy(pos.row, pos.col, color)) {
+                continue;
+            }
+
+            pawnMoves.add(new Move(
+                    new Position(pos.row, pos.col),
+                    new Position(toRow, toCol)));
+        }
+
+        return pawnMoves;
     }
 
     private List<Move> genBishopMoves(Position pos, Board board) {
@@ -106,7 +140,4 @@ public class MoveGenerator {
         return new ArrayList<>();
     }
 
-    private List<Move> genPawnMoves(Position pos, Board board) {
-        return new ArrayList<>();
-    }
 }
