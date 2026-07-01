@@ -16,7 +16,8 @@ I'm building it as a learning project to practice DSA, system design, and full-s
 
 ### In Progress
 - [ ] Piece movement logic
-  - [ ] Bishop, Rook, Pawn, and Queen move generation
+  - [X] Bishop, Rook, and Queen move generation
+  - [ ] Pawn move generation
   - [ ] Checking for legal moves
   - [ ] Highlighting legal moves on piece selection in the frontend
 - [ ] Button to reset board

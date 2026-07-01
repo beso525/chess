@@ -11,7 +11,7 @@
           [class.selected]="isSelected(r,f)"
           (click)="onSquareClick(r, f)">
           @if(cell) {
-            <img [src]="'../assets/' + cell + '.svg'" [alt]="cell" class="piece" />
+            <img [src]="'../assets/' + cell + '.svg'" [alt]="cell" class="filter piece" />
           }
         </div>
       }

@@ -36,7 +36,7 @@ public class MoveGenerator {
         char color = board.getPiece(pos.row, pos.col).charAt(0);
 
         int[][] potentialMoves = {
-            {-1, -1}, {0, 1}, {1, 1},
+            {-1, 1}, {0, 1}, {1, 1},
             {-1, 0}, {1, 0},
             {-1, -1}, {0, -1}, {1, -1}
         };
@@ -44,9 +44,9 @@ public class MoveGenerator {
         // squares[0][-1], squares[+1][-1], squares[+1][0], squares[+1][+1]
         // squares[0][+1], squares[-1][+1], squares[-1][0], squares[-1][-1]
 
-        for (int[] pMove : potentialMoves) {
-            int toRow = pos.row + pMove[0];
-            int toCol = pos.col + pMove[1];
+        for (int[] kingMove : potentialMoves) {
+            int toRow = pos.row + kingMove[0];
+            int toCol = pos.col + kingMove[1];
 
             if (toRow < 0 || toRow > 7 || toCol < 0 || toCol > 7) {
                 continue;
@@ -69,21 +69,20 @@ public class MoveGenerator {
         ArrayList<Move> knightMoves = new ArrayList<>();
         char color = board.getPiece(pos.row, pos.col).charAt(0);
 
-        //
         int[][] potentialMoves = {
             {-2, 1}, {-1, 2}, {1, 2}, {2, 1},
             {2, -1}, {1, -2}, {-1, -2}, {-2, -1}
         };
 
-        for (int[] moveKnight : potentialMoves) {
-            int toRow = pos.row + moveKnight[0];
-            int toCol = pos.col + moveKnight[1];
+        for (int[] knightMove : potentialMoves) {
+            int toRow = pos.row + knightMove[0];
+            int toCol = pos.col + knightMove[1];
 
             if (toRow < 0 || toRow > 7 || toCol < 0 || toCol > 7) {
                 continue;
             }
 
-            if (!board.isEmpty(toRow, toCol) && !board.isEnemy(pos.row, pos.col, color)) {
+            if (!board.isEmpty(toRow, toCol) && !board.isEnemy(toRow, toCol, color)) {
                 continue;
             }
 
@@ -103,14 +102,13 @@ public class MoveGenerator {
         ArrayList<Move> pawnMoves = new ArrayList<>();
         char color = board.getPiece(pos.row, pos.col).charAt(0);
 
-        //
         int[][] potentialMoves = {
             {-1, -1}, {1, 1}, {0, 1}
         };
 
-        for (int[] moveKnight : potentialMoves) {
-            int toRow = pos.row + moveKnight[0];
-            int toCol = pos.col + moveKnight[1];
+        for (int[] pawnMove : potentialMoves) {
+            int toRow = pos.row + pawnMove[0];
+            int toCol = pos.col + pawnMove[1];
 
             if (toRow < 0 || toRow > 7 || toCol < 0 || toCol > 7) {
                 continue;
@@ -129,15 +127,78 @@ public class MoveGenerator {
     }
 
     private List<Move> genBishopMoves(Position pos, Board board) {
-        return new ArrayList<>();
+        ArrayList<Move> bishopMoves = new ArrayList<>();
+        char color = board.getPiece(pos.row, pos.col).charAt(0);
+
+        int[][] potentialMoves = {
+            {-1, 1}, {1, 1},
+            {-1, -1}, {1, -1}
+        };
+
+        for (int[] bishopMove : potentialMoves) {
+            int toRow = pos.row + bishopMove[0];
+            int toCol = pos.col + bishopMove[1];
+
+            while (toRow >= 0 && toRow <= 7 && toCol >= 0 && toCol <= 7) {
+
+                if (board.isEmpty(toRow, toCol)) {
+                    bishopMoves.add(new Move(
+                            new Position(pos.row, pos.col),
+                            new Position(toRow, toCol)));
+
+                } else if (board.isEnemy(toRow, toCol, color)) {
+                    bishopMoves.add(new Move(
+                            new Position(pos.row, pos.col),
+                            new Position(toRow, toCol)));
+                    break;
+                } else {
+                    break;
+                }
+                toRow += bishopMove[0];
+                toCol += bishopMove[1];
+            }
+        }
+        return bishopMoves;
     }
 
     private List<Move> genRookMoves(Position pos, Board board) {
-        return new ArrayList<>();
+
+        ArrayList<Move> rookMoves = new ArrayList<>();
+        char color = board.getPiece(pos.row, pos.col).charAt(0);
+
+        int[][] potentialMoves = {
+            {-1, 0}, {0, 1}, {1, 0}, {0, -1}
+        };
+
+        for (int[] rookMove : potentialMoves) {
+            int toRow = pos.row + rookMove[0];
+            int toCol = pos.col + rookMove[1];
+
+            while (toRow >= 0 && toRow <= 7 && toCol >= 0 && toCol <= 7) {
+                if (board.isEmpty(toRow, toCol)) {
+                    rookMoves.add(new Move(
+                            new Position(pos.row, pos.col),
+                            new Position(toRow, toCol)));
+                } else if (board.isEnemy(toRow, toCol, color)) {
+                    rookMoves.add(new Move(
+                            new Position(pos.row, pos.col),
+                            new Position(toRow, toCol)));
+                    break;
+                } else {
+                    break;
+                }
+                toRow += rookMove[0];
+                toCol += rookMove[1];
+            }
+        }
+        return rookMoves;
     }
 
     private List<Move> genQueenMoves(Position pos, Board board) {
-        return new ArrayList<>();
+        ArrayList<Move> queenMoves = new ArrayList<>();
+        queenMoves.addAll(genBishopMoves(pos, board));
+        queenMoves.addAll(genRookMoves(pos, board));
+        return queenMoves;
     }
 
 }
