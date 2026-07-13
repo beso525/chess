@@ -17,17 +17,17 @@ class EngineApplicationTests {
     @Test
     void contextLoads() {
         Board board = new Board();
-        // for (int r = 0; r < 8; r++) {
-        //     for (int c = 0; c < 8; c++) {
-        //         board.getSquares()[r][c] = null;
-        //     }
-        // }
-        board.getSquares()[4][4] = "wQ";
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                board.getSquares()[r][c] = null;
+            }
+        }
+        board.getSquares()[6][4] = "wP";
 
         MoveGenerator gen = new MoveGenerator();
-        List<Move> moves = gen.genMove(new Position(4, 4), board);
+        List<Move> moves = gen.genMove(new Position(6, 4), board);
 
-        assertEquals(19, moves.size());
+        assertEquals(3, moves.size());
     }
 
 }

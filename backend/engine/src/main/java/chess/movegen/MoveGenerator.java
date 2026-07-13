@@ -94,36 +94,55 @@ public class MoveGenerator {
     }
 
     private List<Move> genPawnMoves(Position pos, Board board) {
-
-        // check if pawn has moved
-        // if first move - can move twice
-        // if later, then can move only forward, unless theres an enemy piece either 
-        // in square[+1][+1] or square[-1][-1]
         ArrayList<Move> pawnMoves = new ArrayList<>();
         char color = board.getPiece(pos.row, pos.col).charAt(0);
+        // check color
+        if (color == 'w') {
 
-        int[][] potentialMoves = {
-            {-1, -1}, {1, 1}, {0, 1}
-        };
+            int toRow = pos.row - 1;
 
-        for (int[] pawnMove : potentialMoves) {
-            int toRow = pos.row + pawnMove[0];
-            int toCol = pos.col + pawnMove[1];
-
-            if (toRow < 0 || toRow > 7 || toCol < 0 || toCol > 7) {
-                continue;
+            if (toRow == 6 && board.isEmpty(pos.row - 2, pos.col)) {
+                pawnMoves.add(new Move(
+                        new Position(toRow, pos.col),
+                        new Position(toRow - 2, pos.col)));
             }
 
-            if (!board.isEmpty(toRow, toCol) && !board.isEnemy(pos.row, pos.col, color)) {
-                continue;
+            if (toRow >= 0 && board.isEmpty(toRow, pos.col)) {
+                pawnMoves.add(new Move(pos, new Position(toRow - 1, pos.col)));
             }
 
-            pawnMoves.add(new Move(
-                    new Position(pos.row, pos.col),
-                    new Position(toRow, toCol)));
+            if (toRow == 0 && board.isEmpty(toRow, pos.col)) {
+                pawnUpgrade(color);
+            }
         }
 
+        if (color == 'b') {
+
+            int toRow = pos.row + 1;
+
+            if (toRow == 2 && board.isEmpty(pos.row + 2, pos.col)) {
+                pawnMoves.add(new Move(
+                        new Position(toRow, pos.col),
+                        new Position(toRow + 2, pos.col)));
+            }
+
+            if (toRow <= 7 && board.isEmpty(toRow, pos.col)) {
+                pawnMoves.add(new Move(pos, new Position(toRow - 1, pos.col)));
+            }
+
+            if (toRow == 7 && board.isEmpty(toRow, pos.col)) {
+                pawnUpgrade(color);
+            }
+        }
         return pawnMoves;
+    }
+
+    private String[] pawnUpgrade(char myColor) {
+        String[] pieces = {"Q", "R", "B", "K"};
+        for (int i = 0; i < pieces.length; i++) {
+            pieces[i] += myColor + pieces[i];
+        }
+        return pieces;
     }
 
     private List<Move> genBishopMoves(Position pos, Board board) {
