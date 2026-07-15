@@ -1,6 +1,8 @@
 package chess.api;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,14 +38,19 @@ public class BoardController {
     }
 
     @GetMapping("/legal-moves")
-    public List<int[]> getLegalMoves(
+    public List<Map<String, Integer>> getLegalMoves(
             @RequestParam int row,
             @RequestParam int col
     ) {
         List<Move> moves = moveGenerator.genMove(new Position(row, col), gameService.getBoard());
+
         return moves.stream()
-                .map(m -> new int[]{m.getToPos().row, m.getToPos().col})
-                .toList();
+                .map(m -> {
+                    Map<String, Integer> map = new HashMap<>();
+                    map.put("toRow", m.getToPos().row);
+                    map.put("toCol", m.getToPos().col);
+                    return map;
+                }).toList();
     }
 
     @PostMapping("/move")

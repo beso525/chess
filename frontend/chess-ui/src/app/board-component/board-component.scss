@@ -37,7 +37,7 @@
 }
 
 .legal-dot {
-  position: absolute;
+  position: relative;
   width: 30%;
   height: 30%;
   background: rgba($color: black, $alpha: 0.3);
@@ -49,7 +49,7 @@
 }
 
 .legal-capture {
-  position: absolute;
+  position: relative;
   width: 100%;
   height: 100%;
   border-radius: 50%;
