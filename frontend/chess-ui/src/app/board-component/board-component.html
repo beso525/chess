@@ -13,6 +13,13 @@
           @if(cell) {
             <img [src]="'../assets/' + cell + '.svg'" [alt]="cell" class="filter piece" />
           }
+
+          @if (isLegalMove(r, f) && !cell) {
+            <div class="legal-dot"></div>
+          }
+          @if (isLegalMove(r, f) && cell) {
+            <div class="legal-capture"></div>
+          }
         </div>
       }
     </div>

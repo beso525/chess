@@ -4,3 +4,8 @@ export interface MoveRequest {
   fromCol: number;
   toCol: number;
 }
+
+export interface LegalMoveResponse {
+  toRow: number;
+  toCol: number;
+}

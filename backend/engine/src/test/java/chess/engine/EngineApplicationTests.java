@@ -14,19 +14,17 @@ import chess.movegen.MoveGenerator;
 @SpringBootTest
 class EngineApplicationTests {
 
+    Board board = new Board();
+    MoveGenerator gen = new MoveGenerator();
+
     @Test
     void contextLoads() {
-        Board board = new Board();
-        for (int r = 0; r < 8; r++) {
-            for (int c = 0; c < 8; c++) {
-                board.getSquares()[r][c] = null;
-            }
-        }
         board.getSquares()[6][4] = "wP";
-
-        MoveGenerator gen = new MoveGenerator();
+        board.getSquares()[5][3] = "bP";
         List<Move> moves = gen.genMove(new Position(6, 4), board);
-
+        for (Move move : moves) {
+            System.out.println(move);
+        }
         assertEquals(3, moves.size());
     }
 

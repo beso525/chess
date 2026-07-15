@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { BoardResponse } from "../models/board-state.model";
-import { MoveRequest } from "../models/move-request.model";
+import { LegalMoveResponse, MoveRequest } from "../models/move-request.model";
 
 
 @Injectable({ providedIn: 'root' })
@@ -16,5 +16,9 @@ export class ChessApiService {
 
   makeMove(move: MoveRequest): Observable<BoardResponse> {
     return this.http.post<BoardResponse>(`${this.BASE_URL}/api/move`, move);
+  }
+
+  getLegalMove(row: number, col: number): Observable<LegalMoveResponse[]> {
+    return this.http.get<LegalMoveResponse[]>(`/api/legal-moves?row=${row}&col=${col}`);
   }
 }

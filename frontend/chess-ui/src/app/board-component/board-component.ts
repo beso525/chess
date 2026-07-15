@@ -10,6 +10,7 @@ import { ChessApiService } from '../services/chess-api.service';
 export class BoardComponent implements OnInit {
   squares = signal<(string | null)[][]>([]);
   selected: { row: number, col: number } | null = null;
+  legalMoves = signal<{ toRow: number; toCol: number }[]>([]);
 
   constructor(private api: ChessApiService) { }
 
@@ -29,27 +30,56 @@ export class BoardComponent implements OnInit {
   }
 
   onSquareClick(row: number, col: number): void {
-    if (!this.selected) {
-      if (this.squares()[row][col]) {
-        this.selected = { row, col };
+    if (this.selected) {
+      console.log(this.selected);
+
+      const isLegal = this.legalMoves().some(m => m.toRow == row && m.toCol == col);
+
+      console.log(isLegal);
+
+      if (isLegal) {
+        const from = this.selected;
+        this.selected = null;
+        this.legalMoves.set([]);
+
+        this.api.makeMove({
+          fromRow: from.row,
+          fromCol: from.col,
+          toRow: row,
+          toCol: col
+        }).subscribe({
+          next: res => this.squares.set(res.squares),
+          error: err => console.error(err)
+        })
+      } else if (this.squares()[row][col]) {
+        this.selectPiece(row, col);
+      } else {
+        this.selected = null;
+        this.legalMoves.set([]);
       }
       return;
     }
 
-    const from = this.selected;
-    this.selected = null;
+    if (this.squares()[row][col]) {
+      this.selectPiece(row, col);
+    }
+  }
 
-    if (from.row === row && from.col === col) return;
+  private selectPiece(row: number, col: number): void {
+    this.selected = { row, col };
+    this.legalMoves.set([]);
 
-    this.api.makeMove({
-      fromRow: from.row,
-      fromCol: from.col,
-      toRow: row,
-      toCol: col
-    }).subscribe(res => this.squares.set(res.squares));
+    this.api.getLegalMove(row, col).subscribe({
+      next: moves => this.legalMoves.set(moves),
+      error: err => console.error(err)
+    })
   }
 
   isSelected(row: number, col: number): boolean {
     return this.selected?.row === row && this.selected?.col === col;
+  }
+
+  isLegalMove(row: number, col: number): boolean {
+    return this.legalMoves().some(m => m.toRow == row && m.toCol == col);
   }
 }

@@ -3,10 +3,13 @@ package chess.movegen;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import chess.board.Board;
 import chess.model.Move;
 import chess.model.Position;
 
+@Component
 public class MoveGenerator {
 
     public List<Move> genMove(Position pos, Board board) {
@@ -101,14 +104,26 @@ public class MoveGenerator {
 
             int toRow = pos.row - 1;
 
-            if (toRow == 6 && board.isEmpty(pos.row - 2, pos.col)) {
-                pawnMoves.add(new Move(
-                        new Position(toRow, pos.col),
-                        new Position(toRow - 2, pos.col)));
+            if (toRow >= 0 && board.isEmpty(toRow, pos.col)) {
+                pawnMoves.add(new Move(pos, new Position(toRow, pos.col)));
+
+                if (pos.row == 6 && board.isEmpty(pos.row - 2, pos.col)) {
+                    pawnMoves.add(new Move(
+                            new Position(pos.row, pos.col),
+                            new Position(pos.row - 2, pos.col)));
+                }
             }
 
-            if (toRow >= 0 && board.isEmpty(toRow, pos.col)) {
-                pawnMoves.add(new Move(pos, new Position(toRow - 1, pos.col)));
+            if (pos.col + 1 <= 7 && !board.isEmpty(toRow, pos.col + 1) && board.isEnemy(toRow, pos.col + 1, color)) {
+                pawnMoves.add(new Move(
+                        new Position(pos.row, pos.col),
+                        new Position(toRow, pos.col + 1)));
+            }
+
+            if (pos.col - 1 >= 0 && !board.isEmpty(toRow, pos.col - 1) && board.isEnemy(toRow, pos.col - 1, color)) {
+                pawnMoves.add(new Move(
+                        new Position(pos.row, pos.col),
+                        new Position(toRow, pos.col - 1)));
             }
 
             if (toRow == 0 && board.isEmpty(toRow, pos.col)) {
@@ -120,14 +135,26 @@ public class MoveGenerator {
 
             int toRow = pos.row + 1;
 
-            if (toRow == 2 && board.isEmpty(pos.row + 2, pos.col)) {
-                pawnMoves.add(new Move(
-                        new Position(toRow, pos.col),
-                        new Position(toRow + 2, pos.col)));
+            if (toRow <= 7 && board.isEmpty(toRow, pos.col)) {
+                pawnMoves.add(new Move(pos, new Position(toRow, pos.col)));
+
+                if (pos.row == 1 && board.isEmpty(pos.row + 2, pos.col)) {
+                    pawnMoves.add(new Move(
+                            new Position(pos.row, pos.col),
+                            new Position(pos.row + 2, pos.col)));
+                }
             }
 
-            if (toRow <= 7 && board.isEmpty(toRow, pos.col)) {
-                pawnMoves.add(new Move(pos, new Position(toRow - 1, pos.col)));
+            if (pos.col - 1 >= 0 && !board.isEmpty(toRow, pos.col - 1) && board.isEnemy(toRow, pos.col - 1, color)) {
+                pawnMoves.add(new Move(
+                        new Position(pos.row, pos.col),
+                        new Position(toRow, pos.col - 1)));
+            }
+
+            if (pos.col + 1 <= 7 && !board.isEmpty(toRow, pos.col + 1) && board.isEnemy(toRow, pos.col + 1, color)) {
+                pawnMoves.add(new Move(
+                        new Position(pos.row, pos.col),
+                        new Position(toRow, pos.col + 1)));
             }
 
             if (toRow == 7 && board.isEmpty(toRow, pos.col)) {
