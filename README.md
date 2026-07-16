@@ -15,11 +15,11 @@ I'm building it as a learning project to practice DSA, system design, and full-s
 - [x] King, Knight move generation
 
 ### In Progress
-- [ ] Piece movement logic
-  - [X] Bishop, Rook, and Queen move generation
-  - [ ] Pawn move generation
-  - [ ] Checking for legal moves
-  - [ ] Highlighting legal moves on piece selection in the frontend
+- [x] Piece movement logic
+  - [x] Bishop, Rook, and Queen move generation
+  - [x] Pawn move generation
+  - [x] Checking for legal moves
+  - [x] Highlighting legal moves on piece selection in the frontend
 - [ ] Button to reset board
 
 ### Future Features
