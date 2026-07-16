@@ -15,29 +15,15 @@ export class BoardComponent implements OnInit {
   constructor(private api: ChessApiService) { }
 
   ngOnInit(): void {
-    console.log('init');
     this.api.getBoard().subscribe({
-      next: res => {
-        console.log('GOT BOARD', res);
-        this.squares.set(res.squares);
-        console.log('SQUARES SET', this.squares.length);
-
-      },
-      error: err => {
-        console.error('failed to load board', err);
-      }
+      next: res => this.squares.set(res.squares),
+      error: err => console.error('failed to load board', err)
     });
   }
 
   onSquareClick(row: number, col: number): void {
     if (this.selected) {
-      console.log(this.selected);
-
-      const isLegal = this.legalMoves().some(m => m.toRow == row && m.toCol == col);
-
-      console.log(isLegal);
-
-      if (isLegal) {
+      if (this.isLegalMove(row, col)) {
         const from = this.selected;
         this.selected = null;
         this.legalMoves.set([]);
@@ -80,6 +66,6 @@ export class BoardComponent implements OnInit {
   }
 
   isLegalMove(row: number, col: number): boolean {
-    return this.legalMoves().some(m => m.toRow == row && m.toCol == col);
+    return this.legalMoves().some(m => m.toRow === row && m.toCol === col);
   }
 }

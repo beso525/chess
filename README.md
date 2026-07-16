@@ -13,21 +13,19 @@ I'm building it as a learning project to practice DSA, system design, and full-s
 - [x] Click to select and move pieces
 - [x] Game state saved
 - [x] King, Knight move generation
+- [x] Piece movement logic
 
 ### In Progress
-- [x] Piece movement logic
-  - [x] Bishop, Rook, and Queen move generation
-  - [x] Pawn move generation
-  - [x] Checking for legal moves
-  - [x] Highlighting legal moves on piece selection in the frontend
+**Phase 4** 
 - [ ] Button to reset board
-
-### Future Features
 - [ ] Final chess rule sets
   - [ ] Checkmate / stalemate
   - [ ] Castling
   - [ ] En Passant
   - [ ] Pawn promotion
+- [ ] Turn based movement
+
+### Future Features
 - [ ] Chess engine opponent 
   - [ ] With future tests to determine chess rating vs stockfish
 - [ ] Player vs computer mode
@@ -35,7 +33,8 @@ I'm building it as a learning project to practice DSA, system design, and full-s
 ## DSA concepts used
 
 - *Arrays, 2D matrices*
-- 
+- *ArrayList*
+- *HashMaps*
 
 ## Learning Objective
 
@@ -43,7 +42,7 @@ I'm building this project in multiple phases
 
 - [x] **Phase 1**: Board rendering, connecting backend with frontend
 - [x] **Phase 2**: Click to move
-- [ ] **Phase 3**: Piece move generation and legal moves
+- [x] **Phase 3**: Piece move generation and legal moves
 - [ ] **Phase 4**: Full rule set, turn based
 - [ ] **Phase 5**: Engine opponent
 
