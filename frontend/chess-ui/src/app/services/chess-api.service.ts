@@ -8,7 +8,7 @@ import { LegalMoveResponse, MoveRequest } from "../models/move-request.model";
 @Injectable({ providedIn: 'root' })
 export class ChessApiService {
   constructor(private http: HttpClient) { }
-  private readonly BASE_URL = 'http://localhost:8080'
+  private readonly BASE_URL = 'http://localhost:4200'
 
   getBoard(): Observable<BoardResponse> {
     return this.http.get<BoardResponse>(`${this.BASE_URL}/api/board`);

@@ -34,7 +34,6 @@ public class Board {
         return squares[row][col];
     }
 
-    // i should later track whether the player is playing with white or black pieces
     public boolean isWhite(int row, int col) {
         String piece = squares[row][col];
         return piece != null && piece.charAt(0) == 'w';
