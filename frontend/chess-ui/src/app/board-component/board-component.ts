@@ -11,12 +11,16 @@ export class BoardComponent implements OnInit {
   squares = signal<(string | null)[][]>([]);
   selected: { row: number, col: number } | null = null;
   legalMoves = signal<{ toRow: number; toCol: number }[]>([]);
+  whiteTurn = signal<boolean>(true);
 
   constructor(private api: ChessApiService) { }
 
   ngOnInit(): void {
     this.api.getBoard().subscribe({
-      next: res => this.squares.set(res.squares),
+      next: res => {
+        this.squares.set(res.squares)
+        this.whiteTurn.set(res.whiteTurn)
+      },
       error: err => console.error('failed to load board', err)
     });
   }
@@ -34,7 +38,10 @@ export class BoardComponent implements OnInit {
           toRow: row,
           toCol: col
         }).subscribe({
-          next: res => this.squares.set(res.squares),
+          next: res => {
+            this.squares.set(res.squares)
+            this.whiteTurn.set(res.whiteTurn)
+          },
           error: err => console.error(err)
         })
       } else if (this.squares()[row][col]) {
@@ -47,7 +54,11 @@ export class BoardComponent implements OnInit {
     }
 
     if (this.squares()[row][col]) {
-      this.selectPiece(row, col);
+      const piece = this.squares()[row][col];
+      const isWhitePiece = piece!.charAt(0) === 'w';
+      if (isWhitePiece === this.whiteTurn()) {
+        this.selectPiece(row, col);
+      }
     }
   }
 

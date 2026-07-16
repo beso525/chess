@@ -40,11 +40,6 @@ public class Board {
         return piece != null && piece.charAt(0) == 'w';
     }
 
-    public boolean isBlack(int row, int col) {
-        String piece = squares[row][col];
-        return piece != null && piece.charAt(0) == 'b';
-    }
-
     public boolean isEmpty(int row, int col) {
         return squares[row][col] == null;
     }

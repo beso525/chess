@@ -14,6 +14,7 @@ I'm building it as a learning project to practice DSA, system design, and full-s
 - [x] Game state saved
 - [x] King, Knight move generation
 - [x] Piece movement logic
+- [x] Turn based movement
 
 ### In Progress
 **Phase 4** 
@@ -23,7 +24,6 @@ I'm building it as a learning project to practice DSA, system design, and full-s
   - [ ] Castling
   - [ ] En Passant
   - [ ] Pawn promotion
-- [ ] Turn based movement
 
 ### Future Features
 - [ ] Chess engine opponent 

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +35,10 @@ public class BoardController {
 
     @GetMapping("/board")
     public BoardResponse getBoard() {
-        return new BoardResponse(gameService.getBoard().getSquares());
+        return new BoardResponse(
+                gameService.getBoard().getSquares(),
+                gameService.isWhiteTurn()
+        );
     }
 
     @GetMapping("/legal-moves")
@@ -54,8 +58,16 @@ public class BoardController {
     }
 
     @PostMapping("/move")
-    public BoardResponse makeMove(@RequestBody MoveRequest move) {
+    public ResponseEntity<BoardResponse> makeMove(@RequestBody MoveRequest move) {
+        if (!gameService.isCorrectTurn(move.getFromRow(), move.getFromCol())) {
+            return ResponseEntity.badRequest().build();
+        }
         gameService.makeMove(move.getFromRow(), move.getFromCol(), move.getToRow(), move.getToCol());
-        return new BoardResponse(gameService.getBoard().getSquares());
+        gameService.flipTurn();
+
+        return ResponseEntity.ok(new BoardResponse(
+                gameService.getBoard().getSquares(),
+                gameService.isWhiteTurn())
+        );
     }
 }
