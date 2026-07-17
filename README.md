@@ -24,6 +24,7 @@ I'm building it as a learning project to practice DSA, system design, and full-s
   - [ ] Castling
   - [ ] En Passant
   - [ ] Pawn promotion
+  - [ ] Check detection
 
 ### Future Features
 - [ ] Chess engine opponent 

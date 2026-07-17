@@ -1,6 +1,8 @@
 <div class="turn">
   {{ whiteTurn() ? "White turn": "Black turn"}}
 </div>
+
+<button (click)="resetBoard()">New Game</button>
 <div class="board">
   @for (row of squares(); track $index; let r = $index) 
   {

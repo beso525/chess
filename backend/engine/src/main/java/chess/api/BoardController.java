@@ -70,4 +70,13 @@ public class BoardController {
                 gameService.isWhiteTurn())
         );
     }
+
+    @GetMapping("/reset")
+    public ResponseEntity<BoardResponse> resetBoard() {
+        gameService.resetBoard();
+        return ResponseEntity.ok(new BoardResponse(
+                gameService.getBoard().getSquares(),
+                gameService.isWhiteTurn())
+        );
+    }
 }

@@ -14,6 +14,11 @@ public class GameService {
         return board;
     }
 
+    public void resetBoard() {
+        board.resetStartingPosition();
+        isWhiteTurn = true;
+    }
+
     public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {
         board.movePiece(fromRow, fromCol, toRow, toCol);
     }

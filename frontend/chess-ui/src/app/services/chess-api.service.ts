@@ -21,4 +21,8 @@ export class ChessApiService {
   getLegalMove(row: number, col: number): Observable<LegalMoveResponse[]> {
     return this.http.get<LegalMoveResponse[]>(`/api/legal-moves?row=${row}&col=${col}`);
   }
+
+  resetBoard(): Observable<BoardResponse> {
+    return this.http.get<BoardResponse>('/api/reset', {});
+  }
 }

@@ -79,4 +79,22 @@ export class BoardComponent implements OnInit {
   isLegalMove(row: number, col: number): boolean {
     return this.legalMoves().some(m => m.toRow === row && m.toCol === col);
   }
+
+  resetBoard(): void {
+    this.api.resetBoard().subscribe({
+      next: res => {
+        console.log(res, "reset board");
+        this.squares.set(res.squares);
+        this.whiteTurn.set(res.whiteTurn);
+        this.selected = null;
+        this.legalMoves.set([]);
+        console.log(this.squares());
+        console.log(this.whiteTurn());
+        console.log(this.selected);
+        console.log(this.legalMoves());
+
+      },
+      error: err => console.log(err, "err"),
+    })
+  }
 }
