@@ -88,11 +88,6 @@ export class BoardComponent implements OnInit {
         this.whiteTurn.set(res.whiteTurn);
         this.selected = null;
         this.legalMoves.set([]);
-        console.log(this.squares());
-        console.log(this.whiteTurn());
-        console.log(this.selected);
-        console.log(this.legalMoves());
-
       },
       error: err => console.log(err, "err"),
     })

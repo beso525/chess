@@ -23,7 +23,7 @@ public class Board {
     public final void resetStartingPosition() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                squares[i][j] = "";
+                squares[i][j] = null;
             }
         }
         startingPosition();

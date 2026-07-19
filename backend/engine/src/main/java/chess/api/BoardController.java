@@ -71,7 +71,7 @@ public class BoardController {
         );
     }
 
-    @GetMapping("/reset")
+    @PostMapping("/reset")
     public ResponseEntity<BoardResponse> resetBoard() {
         gameService.resetBoard();
         return ResponseEntity.ok(new BoardResponse(

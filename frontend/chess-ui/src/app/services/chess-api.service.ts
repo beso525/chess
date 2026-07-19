@@ -23,6 +23,6 @@ export class ChessApiService {
   }
 
   resetBoard(): Observable<BoardResponse> {
-    return this.http.get<BoardResponse>('/api/reset', {});
+    return this.http.post<BoardResponse>('/api/reset', {});
   }
 }
