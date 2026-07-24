@@ -4,7 +4,7 @@
 <button (click)="resetBoard()">New Game</button>
 
 @if (activeModal()) {
-  <div class="promotion-modal" (click)="$event.stopPropagation()">
+  <div class="promotion-modal">
     @for (piece of promotionPieces; track $index) {
       <img
         [src]="'../assets/' + promotionColor() + piece + '.svg'"

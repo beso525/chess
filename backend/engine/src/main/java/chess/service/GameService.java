@@ -40,9 +40,10 @@ public class GameService {
     public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {
         String piece = board.getPiece(fromRow, fromCol);
         char color = piece.charAt(0);
+        char pawn = piece.charAt(1);
 
-        if ((color == 'w' && toRow == 0)
-                || (color == 'b' && toRow == 7)) {
+        if ((color == 'w' && pawn == 'P' && toRow == 0)
+                || (color == 'b' && pawn == 'P' && toRow == 7)) {
             pendingPromotion = true;
             promotionRow = toRow;
             promotionCol = toCol;
@@ -58,6 +59,8 @@ public class GameService {
         char color = board.getPiece(row, col).charAt(0);
         board.getSquares()[row][col] = color + chosenPiece;
         pendingPromotion = false;
+        promotionRow = -1;
+        promotionCol = -1;
         isWhiteTurn = !isWhiteTurn;
     }
 
