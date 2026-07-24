@@ -10,21 +10,19 @@ I'm building it as a learning project to practice DSA, system design, and full-s
 ## Features
 ### Completed
 - [x] Chessboard rendered with initial board pieces.
-- [x] Click to select and move pieces
 - [x] Game state saved
-- [x] King, Knight move generation
 - [x] Piece movement logic
 - [x] Turn based movement
+- [x] Button to reset board
 
 ### In Progress
 **Phase 4** 
-- [ ] Button to reset board
-- [ ] Final chess rule sets
+- [ ] Special rule sets
+  - [ ] Check detection
   - [ ] Checkmate / stalemate
   - [ ] Castling
   - [ ] En Passant
   - [ ] Pawn promotion
-  - [ ] Check detection
 
 ### Future Features
 - [ ] Chess engine opponent 

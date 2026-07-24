@@ -8,10 +8,16 @@ import { ChessApiService } from '../services/chess-api.service';
   styleUrl: './board-component.scss',
 })
 export class BoardComponent implements OnInit {
-  squares = signal<(string | null)[][]>([]);
   selected: { row: number, col: number } | null = null;
+  squares = signal<(string | null)[][]>([]);
   legalMoves = signal<{ toRow: number; toCol: number }[]>([]);
   whiteTurn = signal<boolean>(true);
+  pendingPromotion = signal<boolean>(false);
+  promotionRow = signal<number>(-1);
+  promotionCol = signal<number>(-1);
+  promotionColor = signal<string>('');
+  activeModal = signal<boolean>(false);
+  promotionPieces: string[] = ['Q', 'N', 'B', 'R'];
 
   constructor(private api: ChessApiService) { }
 
@@ -24,8 +30,11 @@ export class BoardComponent implements OnInit {
       error: err => console.error('failed to load board', err)
     });
   }
-
   onSquareClick(row: number, col: number): void {
+    if (this.activeModal()) {
+      return;
+    }
+
     if (this.selected) {
       if (this.isLegalMove(row, col)) {
         const from = this.selected;
@@ -41,6 +50,16 @@ export class BoardComponent implements OnInit {
           next: res => {
             this.squares.set(res.squares)
             this.whiteTurn.set(res.whiteTurn)
+            if (res.pendingPromotion) {
+              console.log('promotion res:', res);  // ← what does this show?
+              // console.log('pawn at:', res.row, res.col, this.squares()[res.row][res.col]);
+
+              this.activeModal.set(true)
+              this.promotionCol.set(res.promotionCol)
+              this.promotionRow.set(res.promotionRow)
+              const pawn = this.squares()[res.promotionRow][res.promotionCol];
+              this.promotionColor.set(pawn!.charAt(0));
+            }
           },
           error: err => console.error(err)
         })
@@ -88,8 +107,37 @@ export class BoardComponent implements OnInit {
         this.whiteTurn.set(res.whiteTurn);
         this.selected = null;
         this.legalMoves.set([]);
+        this.pendingPromotion.set(false)
+        this.activeModal.set(false)
+        this.promotionCol.set(-1)
+        this.promotionRow.set(-1)
+        this.promotionColor.set('')
       },
       error: err => console.log(err, "err"),
     })
   }
+
+  promotePawn(piece: string): void {
+    this.api.promotePawn({
+      row: this.promotionRow(),
+      col: this.promotionCol(),
+      piece: piece,
+    }).subscribe({
+      next: res => {
+        console.log(res)
+        this.pendingPromotion.set(false)
+        this.activeModal.set(false)
+        this.promotionCol.set(-1)
+        this.promotionRow.set(-1)
+        this.promotionColor.set('')
+        this.squares.set(res.squares)
+        this.whiteTurn.set(res.whiteTurn)
+        this.selected = null;
+        this.legalMoves.set([]);
+      },
+      error: err => console.error(err)
+    })
+  }
+
+
 }

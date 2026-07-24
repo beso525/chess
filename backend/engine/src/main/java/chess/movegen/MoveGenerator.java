@@ -125,10 +125,6 @@ public class MoveGenerator {
                         new Position(pos.row, pos.col),
                         new Position(toRow, pos.col - 1)));
             }
-
-            if (toRow == 0 && board.isEmpty(toRow, pos.col)) {
-                pawnUpgrade(color);
-            }
         }
 
         if (color == 'b') {
@@ -156,20 +152,8 @@ public class MoveGenerator {
                         new Position(pos.row, pos.col),
                         new Position(toRow, pos.col + 1)));
             }
-
-            if (toRow == 7 && board.isEmpty(toRow, pos.col)) {
-                pawnUpgrade(color);
-            }
         }
         return pawnMoves;
-    }
-
-    private String[] pawnUpgrade(char myColor) {
-        String[] pieces = {"Q", "R", "B", "K"};
-        for (int i = 0; i < pieces.length; i++) {
-            pieces[i] += myColor + pieces[i];
-        }
-        return pieces;
     }
 
     private List<Move> genBishopMoves(Position pos, Board board) {

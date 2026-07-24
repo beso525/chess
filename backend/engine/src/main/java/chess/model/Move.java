@@ -4,6 +4,7 @@ public class Move {
 
     private Position from;
     private Position to;
+    private boolean isPromotion;
 
     public Move(Position from, Position to) {
         this.from = from;
@@ -16,5 +17,9 @@ public class Move {
 
     public Position getToPos() {
         return to;
+    }
+
+    public boolean isPromotion() {
+        return isPromotion;
     }
 }

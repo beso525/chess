@@ -1,4 +1,5 @@
 .board {
+  position: relative;
   border: 1px solid black;
   width: fit-content;
   justify-self: center;
@@ -51,6 +52,7 @@
 .legal-capture {
   position: relative;
   z-index: 5000;
+  justify-self: center;
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -58,4 +60,29 @@
   box-sizing: border-box;
   top: -100%;
   pointer-events: none;
+}
+
+.promotion-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 2px solid #333;
+  border-radius: 8px;
+  display: flex;
+  padding: 12px;
+  gap: 8px;
+  z-index: 4000;
+}
+
+.promotion-piece {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}
+
+.promotion-piece:hover {
+  background: rgba($color: #000000, $alpha: 0.1);
+  border-radius: 4px;
 }

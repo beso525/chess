@@ -1,8 +1,21 @@
 <div class="turn">
   {{ whiteTurn() ? "White turn": "Black turn"}}
 </div>
-
 <button (click)="resetBoard()">New Game</button>
+
+@if (activeModal()) {
+  <div class="promotion-modal" (click)="$event.stopPropagation()">
+    @for (piece of promotionPieces; track $index) {
+      <img
+        [src]="'../assets/' + promotionColor() + piece + '.svg'"
+        [alt]="piece"
+        class="promotion-piece"
+        (click)="promotePawn(piece)"
+      />
+    }
+  </div>
+}
+
 <div class="board">
   @for (row of squares(); track $index; let r = $index) 
   {
@@ -18,7 +31,6 @@
           @if(cell) {
             <img [src]="'../assets/' + cell + '.svg'" [alt]="cell" class="filter piece" />
           }
-
           @if (isLegalMove(r, f) && !cell) {
             <div class="legal-dot"></div>
           }

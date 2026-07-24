@@ -9,3 +9,9 @@ export interface LegalMoveResponse {
   toRow: number;
   toCol: number;
 }
+
+export interface PromotionRequest {
+  row: number;
+  col: number;
+  piece: string;
+}

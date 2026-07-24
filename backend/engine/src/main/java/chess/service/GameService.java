@@ -9,22 +9,56 @@ public class GameService {
 
     private final Board board = new Board();
     private boolean isWhiteTurn = true;
+    private boolean pendingPromotion = false;
+    private int promotionRow = -1;
+    private int promotionCol = -1;
 
     public Board getBoard() {
         return board;
     }
 
+    public int getPromotionRow() {
+        return promotionRow;
+    }
+
+    public int getPromotionCol() {
+        return promotionCol;
+    }
+
+    public boolean isPendingPromotion() {
+        return pendingPromotion;
+    }
+
     public void resetBoard() {
         board.resetStartingPosition();
         isWhiteTurn = true;
+        pendingPromotion = false;
+        promotionRow = -1;
+        promotionCol = -1;
     }
 
     public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {
+        String piece = board.getPiece(fromRow, fromCol);
+        char color = piece.charAt(0);
+
+        if ((color == 'w' && toRow == 0)
+                || (color == 'b' && toRow == 7)) {
+            pendingPromotion = true;
+            promotionRow = toRow;
+            promotionCol = toCol;
+        }
         board.movePiece(fromRow, fromCol, toRow, toCol);
     }
 
     public boolean isWhiteTurn() {
         return isWhiteTurn;
+    }
+
+    public void promotePawn(int row, int col, String chosenPiece) {
+        char color = board.getPiece(row, col).charAt(0);
+        board.getSquares()[row][col] = color + chosenPiece;
+        pendingPromotion = false;
+        isWhiteTurn = !isWhiteTurn;
     }
 
     public boolean isCorrectTurn(int fromRow, int fromCol) {
