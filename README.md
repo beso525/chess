@@ -14,6 +14,8 @@ I'm building it as a learning project to practice DSA, system design, and full-s
 - [x] Piece movement logic
 - [x] Turn based movement
 - [x] Button to reset board
+- [ ] Special rule sets
+  - [x] Pawn promotion
 
 ### In Progress
 **Phase 4** 
@@ -22,7 +24,6 @@ I'm building it as a learning project to practice DSA, system design, and full-s
   - [ ] Checkmate / stalemate
   - [ ] Castling
   - [ ] En Passant
-  - [ ] Pawn promotion
 
 ### Future Features
 - [ ] Chess engine opponent 

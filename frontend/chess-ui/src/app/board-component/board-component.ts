@@ -51,9 +51,6 @@ export class BoardComponent implements OnInit {
             this.squares.set(res.squares)
             this.whiteTurn.set(res.whiteTurn)
             if (res.pendingPromotion) {
-              console.log('promotion res:', res);  // ← what does this show?
-              // console.log('pawn at:', res.row, res.col, this.squares()[res.row][res.col]);
-
               this.activeModal.set(true)
               this.promotionCol.set(res.promotionCol)
               this.promotionRow.set(res.promotionRow)
@@ -102,7 +99,6 @@ export class BoardComponent implements OnInit {
   resetBoard(): void {
     this.api.resetBoard().subscribe({
       next: res => {
-        console.log(res, "reset board");
         this.squares.set(res.squares);
         this.whiteTurn.set(res.whiteTurn);
         this.selected = null;
@@ -113,7 +109,7 @@ export class BoardComponent implements OnInit {
         this.promotionRow.set(-1)
         this.promotionColor.set('')
       },
-      error: err => console.log(err, "err"),
+      error: err => console.error(err, "err"),
     })
   }
 

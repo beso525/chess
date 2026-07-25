@@ -51,7 +51,9 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
         gameService.makeMove(move.getFromRow(), move.getFromCol(), move.getToRow(), move.getToCol());
-        gameService.flipTurn();
+        if (!gameService.isPendingPromotion()) {
+            gameService.flipTurn();
+        }
 
         return ResponseEntity.ok(
                 new BoardResponse(
