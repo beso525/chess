@@ -106,4 +106,5 @@ public class BoardController {
                         gameService.getPromotionCol())
         );
     }
+
 }
