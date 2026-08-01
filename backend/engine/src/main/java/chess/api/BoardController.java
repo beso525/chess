@@ -27,84 +27,89 @@ import chess.service.GameService;
 @CrossOrigin(origins = "http://localhost:4200")
 public class BoardController {
 
-    private final GameService gameService;
-    private final MoveGenerator moveGenerator;
+  private final GameService gameService;
+  private final MoveGenerator moveGenerator;
 
-    public BoardController(GameService gameService, MoveGenerator moveGenerator) {
-        this.gameService = gameService;
-        this.moveGenerator = moveGenerator;
+  public BoardController(GameService gameService, MoveGenerator moveGenerator) {
+    this.gameService = gameService;
+    this.moveGenerator = moveGenerator;
+  }
+
+  @GetMapping("/board")
+  public BoardResponse getBoard() {
+    return new BoardResponse(
+        gameService.getBoard().getSquares(),
+        gameService.isWhiteTurn(),
+        gameService.isPendingPromotion(),
+        gameService.getPromotionRow(),
+        gameService.getPromotionCol(),
+        gameService.isPlayerInCheck());
+  }
+
+  @PostMapping("/move")
+  public ResponseEntity<BoardResponse> makeMove(@RequestBody MoveRequest move) {
+    if (!gameService.isCorrectTurn(move.getFromRow(), move.getFromCol())) {
+      return ResponseEntity.badRequest().build();
+    }
+    gameService.makeMove(move.getFromRow(), move.getFromCol(), move.getToRow(), move.getToCol());
+    if (!gameService.isPendingPromotion()) {
+      gameService.flipTurn();
     }
 
-    @GetMapping("/board")
-    public BoardResponse getBoard() {
-        return new BoardResponse(
-                gameService.getBoard().getSquares(),
-                gameService.isWhiteTurn(),
-                gameService.isPendingPromotion(),
-                gameService.getPromotionRow(),
-                gameService.getPromotionCol());
-    }
+    return ResponseEntity.ok(
+        new BoardResponse(
+            gameService.getBoard().getSquares(),
+            gameService.isWhiteTurn(),
+            gameService.isPendingPromotion(),
+            gameService.getPromotionRow(),
+            gameService.getPromotionCol(),
+            gameService.isPlayerInCheck()));
+  }
 
-    @PostMapping("/move")
-    public ResponseEntity<BoardResponse> makeMove(@RequestBody MoveRequest move) {
-        if (!gameService.isCorrectTurn(move.getFromRow(), move.getFromCol())) {
-            return ResponseEntity.badRequest().build();
-        }
-        gameService.makeMove(move.getFromRow(), move.getFromCol(), move.getToRow(), move.getToCol());
-        if (!gameService.isPendingPromotion()) {
-            gameService.flipTurn();
-        }
+  @GetMapping("/legal-moves")
+  public List<Map<String, Integer>> getLegalMoves(
+      @RequestParam int row,
+      @RequestParam int col) {
+    List<Move> moves = moveGenerator.genMove(new Position(row, col), gameService.getBoard());
 
-        return ResponseEntity.ok(
-                new BoardResponse(
-                        gameService.getBoard().getSquares(),
-                        gameService.isWhiteTurn(),
-                        gameService.isPendingPromotion(),
-                        gameService.getPromotionRow(),
-                        gameService.getPromotionCol())
-        );
-    }
+    return moves.stream()
+        .map(m -> {
+          Map<String, Integer> map = new HashMap<>();
+          map.put("toRow", m.getToPos().row);
+          map.put("toCol", m.getToPos().col);
+          return map;
+        }).toList();
+  }
 
-    @GetMapping("/legal-moves")
-    public List<Map<String, Integer>> getLegalMoves(
-            @RequestParam int row,
-            @RequestParam int col
-    ) {
-        List<Move> moves = moveGenerator.genMove(new Position(row, col), gameService.getBoard());
+  @PostMapping("/reset")
+  public ResponseEntity<BoardResponse> resetBoard() {
+    gameService.resetBoard();
+    return ResponseEntity.ok(
+        new BoardResponse(
+            gameService.getBoard().getSquares(),
+            gameService.isWhiteTurn(),
+            gameService.isPendingPromotion(),
+            gameService.getPromotionRow(),
+            gameService.getPromotionCol(),
+            gameService.isPlayerInCheck()));
+  }
 
-        return moves.stream()
-                .map(m -> {
-                    Map<String, Integer> map = new HashMap<>();
-                    map.put("toRow", m.getToPos().row);
-                    map.put("toCol", m.getToPos().col);
-                    return map;
-                }).toList();
-    }
+  @PutMapping("/swap")
+  public ResponseEntity<BoardResponse> promotePawn(@RequestBody PromotionRequest promote) {
+    gameService.promotePawn(promote.getRow(), promote.getCol(), promote.getPiece());
+    return ResponseEntity.ok(
+        new BoardResponse(
+            gameService.getBoard().getSquares(),
+            gameService.isWhiteTurn(),
+            gameService.isPendingPromotion(),
+            gameService.getPromotionRow(),
+            gameService.getPromotionCol(),
+            gameService.isPlayerInCheck()));
+  }
 
-    @PostMapping("/reset")
-    public ResponseEntity<BoardResponse> resetBoard() {
-        gameService.resetBoard();
-        return ResponseEntity.ok(
-                new BoardResponse(
-                        gameService.getBoard().getSquares(),
-                        gameService.isWhiteTurn(),
-                        gameService.isPendingPromotion(),
-                        gameService.getPromotionRow(),
-                        gameService.getPromotionCol())
-        );
-    }
-
-    @PutMapping("/swap")
-    public ResponseEntity<BoardResponse> promotePawn(@RequestBody PromotionRequest promote) {
-        gameService.promotePawn(promote.getRow(), promote.getCol(), promote.getPiece());
-        return ResponseEntity.ok(
-                new BoardResponse(
-                        gameService.getBoard().getSquares(),
-                        gameService.isWhiteTurn(),
-                        gameService.isPendingPromotion(),
-                        gameService.getPromotionRow(),
-                        gameService.getPromotionCol())
-        );
-    }
+  @GetMapping("/check")
+  public boolean isKingInCheck() {
+    return gameService.isPlayerInCheck();
+  }
 
 }

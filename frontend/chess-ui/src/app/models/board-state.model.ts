@@ -4,4 +4,5 @@ export interface BoardResponse {
   pendingPromotion: boolean;
   promotionRow: number;
   promotionCol: number;
+  inCheck: boolean;
 }

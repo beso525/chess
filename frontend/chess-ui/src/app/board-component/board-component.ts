@@ -18,6 +18,7 @@ export class BoardComponent implements OnInit {
   promotionColor = signal<string>('');
   activeModal = signal<boolean>(false);
   promotionPieces: string[] = ['Q', 'N', 'B', 'R'];
+  inCheck = signal<boolean>(false);
 
   constructor(private api: ChessApiService) { }
 
@@ -50,6 +51,8 @@ export class BoardComponent implements OnInit {
           next: res => {
             this.squares.set(res.squares)
             this.whiteTurn.set(res.whiteTurn)
+            this.inCheck.set(res.inCheck)
+            console.log(this.inCheck)
             if (res.pendingPromotion) {
               this.activeModal.set(true)
               this.promotionCol.set(res.promotionCol)
@@ -101,6 +104,7 @@ export class BoardComponent implements OnInit {
       next: res => {
         this.squares.set(res.squares);
         this.whiteTurn.set(res.whiteTurn);
+        this.inCheck.set(res.inCheck)
         this.selected = null;
         this.legalMoves.set([]);
         this.pendingPromotion.set(false)
@@ -128,6 +132,7 @@ export class BoardComponent implements OnInit {
         this.promotionColor.set('')
         this.squares.set(res.squares)
         this.whiteTurn.set(res.whiteTurn)
+        this.inCheck.set(res.inCheck)
         this.selected = null;
         this.legalMoves.set([]);
       },
