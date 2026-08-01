@@ -1,6 +1,9 @@
 <div class="turn">
   {{ whiteTurn() ? "White turn": "Black turn"}}
 </div>
+<div>
+  {{ inCheck() }}
+</div>
 <button (click)="resetBoard()">New Game</button>
 
 @if (activeModal()) {

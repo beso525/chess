@@ -44,4 +44,8 @@ public class BoardResponse {
     return pendingPromotion;
   }
 
+  public boolean isInCheck() {
+    return inCheck;
+  }
+
 }
