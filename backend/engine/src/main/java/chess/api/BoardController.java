@@ -19,6 +19,7 @@ import chess.api.dto.PromotionRequest;
 import chess.model.BoardResponse;
 import chess.model.Move;
 import chess.model.Position;
+import chess.movegen.LegalMovesFilter;
 import chess.movegen.MoveGenerator;
 import chess.service.GameService;
 
@@ -29,10 +30,12 @@ public class BoardController {
 
   private final GameService gameService;
   private final MoveGenerator moveGenerator;
+  private final LegalMovesFilter legalMovesFilter;
 
-  public BoardController(GameService gameService, MoveGenerator moveGenerator) {
+  public BoardController(GameService gameService, MoveGenerator moveGenerator, LegalMovesFilter legalMovesFilter) {
     this.gameService = gameService;
     this.moveGenerator = moveGenerator;
+    this.legalMovesFilter = legalMovesFilter;
   }
 
   @GetMapping("/board")
@@ -70,7 +73,7 @@ public class BoardController {
   public List<Map<String, Integer>> getLegalMoves(
       @RequestParam int row,
       @RequestParam int col) {
-    List<Move> moves = moveGenerator.genMove(new Position(row, col), gameService.getBoard());
+    List<Move> moves = legalMovesFilter.filterLegalMoves(new Position(row, col), gameService.getBoard());
 
     return moves.stream()
         .map(m -> {

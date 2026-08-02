@@ -16,11 +16,11 @@ I'm building it as a learning project to practice DSA, system design, and full-s
 - [x] Button to reset board
 - [ ] Special rule sets
   - [x] Pawn promotion
+  - [x] Check detection
 
 ### In Progress
 **Phase 4** 
 - [ ] Special rule sets
-  - [ ] Check detection
   - [ ] Checkmate / stalemate
   - [ ] Castling
   - [ ] En Passant
