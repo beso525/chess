@@ -46,7 +46,8 @@ public class BoardController {
         gameService.isPendingPromotion(),
         gameService.getPromotionRow(),
         gameService.getPromotionCol(),
-        gameService.isPlayerInCheck());
+        gameService.isPlayerInCheck(),
+        gameService.getGameStatus());
   }
 
   @PostMapping("/move")
@@ -66,7 +67,8 @@ public class BoardController {
             gameService.isPendingPromotion(),
             gameService.getPromotionRow(),
             gameService.getPromotionCol(),
-            gameService.isPlayerInCheck()));
+            gameService.isPlayerInCheck(),
+            gameService.getGameStatus()));
   }
 
   @GetMapping("/legal-moves")
@@ -94,7 +96,8 @@ public class BoardController {
             gameService.isPendingPromotion(),
             gameService.getPromotionRow(),
             gameService.getPromotionCol(),
-            gameService.isPlayerInCheck()));
+            gameService.isPlayerInCheck(),
+            gameService.getGameStatus()));
   }
 
   @PutMapping("/swap")
@@ -107,7 +110,8 @@ public class BoardController {
             gameService.isPendingPromotion(),
             gameService.getPromotionRow(),
             gameService.getPromotionCol(),
-            gameService.isPlayerInCheck()));
+            gameService.isPlayerInCheck(),
+            gameService.getGameStatus()));
   }
 
   @GetMapping("/check")

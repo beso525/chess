@@ -40,8 +40,6 @@ public class CheckGenerator {
           for (Move move : legalMoves) {
             if (move.getToPos().row == kingPos.row &&
                 move.getToPos().col == kingPos.col) {
-              System.out.println("King is in check at " + kingPos.row + " " + kingPos.col +
-                  " by piece at " + piece);
               return true;
             }
           }

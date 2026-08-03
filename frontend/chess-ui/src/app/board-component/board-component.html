@@ -40,6 +40,9 @@
           @if (isLegalMove(r, f) && cell) {
             <div class="legal-capture"></div>
           }
+          @if (inCheck()) { 
+            {{ inCheck() }}
+          }
         </div>
       }
     </div>

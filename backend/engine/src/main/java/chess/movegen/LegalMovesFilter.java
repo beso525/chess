@@ -22,6 +22,9 @@ public class LegalMovesFilter {
 
   public List<Move> filterLegalMoves(Position pos, Board board) {
     // get all moves
+    if (board.getPiece(pos.row, pos.col) == null) {
+      return new ArrayList<>();
+    }
     List<Move> moves = moveGenerator.genMove(pos, board);
     List<Move> filteredMoves = new ArrayList<>();
     char color = board.getPiece(pos.row, pos.col).charAt(0);

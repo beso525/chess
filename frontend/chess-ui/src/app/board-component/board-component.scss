@@ -86,3 +86,9 @@
   background: rgba($color: #000000, $alpha: 0.1);
   border-radius: 4px;
 }
+
+.cell .checked-king {
+  background-color: rgba($color: red, $alpha: 0.5);
+  height: 100%;
+  width: 100%;
+}

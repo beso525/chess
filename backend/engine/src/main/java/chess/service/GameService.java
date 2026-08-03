@@ -4,12 +4,15 @@ import org.springframework.stereotype.Service;
 
 import chess.board.Board;
 import chess.movegen.CheckGenerator;
+import chess.rules.GameState;
+import chess.rules.GameStatus;
 
 @Service
 public class GameService {
 
   private final Board board = new Board();
   private final CheckGenerator checkGenerator;
+  private final GameState gameState;
   private boolean isWhiteTurn = true;
   private boolean pendingPromotion = false;
   private int promotionRow = -1;
@@ -19,8 +22,9 @@ public class GameService {
     return board;
   }
 
-  public GameService(CheckGenerator checkGenerator) {
+  public GameService(CheckGenerator checkGenerator, GameState gameState) {
     this.checkGenerator = checkGenerator;
+    this.gameState = gameState;
   }
 
   public int getPromotionRow() {
@@ -89,4 +93,8 @@ public class GameService {
     return checkGenerator.isInCheck(kingColor, getBoard());
   }
 
+  public GameStatus getGameStatus() {
+    char color = isWhiteTurn ? 'w' : 'b';
+    return gameState.evaluate(color, getBoard());
+  }
 }

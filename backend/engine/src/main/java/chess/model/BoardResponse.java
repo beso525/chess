@@ -1,5 +1,7 @@
 package chess.model;
 
+import chess.rules.GameStatus;
+
 public class BoardResponse {
 
   private String[][] squares;
@@ -8,6 +10,7 @@ public class BoardResponse {
   private int promotionRow;
   private int promotionCol;
   private boolean inCheck;
+  private GameStatus gameStatus;
 
   public BoardResponse(
       String[][] squares,
@@ -15,13 +18,15 @@ public class BoardResponse {
       boolean pendingPromotion,
       int promotionRow,
       int promotionCol,
-      boolean inCheck) {
+      boolean inCheck,
+      GameStatus gameStatus) {
     this.squares = squares;
     this.whiteTurn = whiteTurn;
     this.pendingPromotion = pendingPromotion;
     this.promotionRow = promotionRow;
     this.promotionCol = promotionCol;
     this.inCheck = inCheck;
+    this.gameStatus = gameStatus;
   }
 
   public String[][] getSquares() {
@@ -46,6 +51,10 @@ public class BoardResponse {
 
   public boolean isInCheck() {
     return inCheck;
+  }
+
+  public GameStatus getGameStatus() {
+    return gameStatus;
   }
 
 }
