@@ -19,6 +19,7 @@ export class BoardComponent implements OnInit {
   activeModal = signal<boolean>(false);
   promotionPieces: string[] = ['Q', 'N', 'B', 'R'];
   inCheck = signal<boolean>(false);
+  gameStatus = signal<string>("ONGOING");
 
   constructor(private api: ChessApiService) { }
 
@@ -52,7 +53,7 @@ export class BoardComponent implements OnInit {
             this.squares.set(res.squares)
             this.whiteTurn.set(res.whiteTurn)
             this.inCheck.set(res.inCheck)
-            console.log(this.inCheck)
+            this.gameStatus.set(res.gameStatus)
             if (res.pendingPromotion) {
               this.activeModal.set(true)
               this.promotionCol.set(res.promotionCol)
@@ -105,6 +106,7 @@ export class BoardComponent implements OnInit {
         this.squares.set(res.squares);
         this.whiteTurn.set(res.whiteTurn);
         this.inCheck.set(res.inCheck)
+        this.gameStatus.set(res.gameStatus)
         this.selected = null;
         this.legalMoves.set([]);
         this.pendingPromotion.set(false)
@@ -130,6 +132,7 @@ export class BoardComponent implements OnInit {
         this.promotionCol.set(-1)
         this.promotionRow.set(-1)
         this.promotionColor.set('')
+        this.gameStatus.set(res.gameStatus)
         this.squares.set(res.squares)
         this.whiteTurn.set(res.whiteTurn)
         this.inCheck.set(res.inCheck)

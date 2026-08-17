@@ -5,4 +5,5 @@ export interface BoardResponse {
   promotionRow: number;
   promotionCol: number;
   inCheck: boolean;
+  gameStatus: 'ONGOING' | 'CHECKMATE' | 'STALEMATE'
 }

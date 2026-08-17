@@ -3,22 +3,30 @@ package chess.movegen;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import chess.board.Board;
+import chess.model.CastlingRights;
 import chess.model.Move;
 import chess.model.Position;
 
 @Component
 public class MoveGenerator {
 
-  public List<Move> genMove(Position pos, Board board) {
+  private final CheckGenerator checkGenerator;
+
+  public MoveGenerator(@Lazy CheckGenerator checkGenerator) {
+    this.checkGenerator = checkGenerator;
+  }
+
+  public List<Move> genMove(Position pos, Board board, CastlingRights castlingRights) {
     String piece = board.getPiece(pos.row, pos.col);
     char type = piece.charAt(1);
 
     return switch (type) {
       case 'K' ->
-        genKingMoves(pos, board);
+        genKingMoves(pos, board, castlingRights);
       case 'Q' ->
         genQueenMoves(pos, board);
       case 'R' ->
@@ -34,36 +42,31 @@ public class MoveGenerator {
     };
   }
 
-  private List<Move> genKingMoves(Position pos, Board board) {
+  private List<Move> genKingMoves(Position pos, Board board, CastlingRights castlingRights) {
     ArrayList<Move> kingMoves = new ArrayList<>();
     char color = board.getPiece(pos.row, pos.col).charAt(0);
 
     int[][] potentialMoves = {
         { -1, 1 }, { 0, 1 }, { 1, 1 },
         { -1, 0 }, { 1, 0 },
-        { -1, -1 }, { 0, -1 }, { 1, -1 }
+        { -1, -1 }, { 0, -1 }, { 1, -1 },
     };
-    // check if col and row is between 0 and 7 inclusive
-    // squares[0][-1], squares[+1][-1], squares[+1][0], squares[+1][+1]
-    // squares[0][+1], squares[-1][+1], squares[-1][0], squares[-1][-1]
 
     for (int[] kingMove : potentialMoves) {
       int toRow = pos.row + kingMove[0];
       int toCol = pos.col + kingMove[1];
 
-      if (toRow < 0 || toRow > 7 || toCol < 0 || toCol > 7) {
+      if (toRow < 0 || toRow > 7 || toCol < 0 || toCol > 7)
         continue;
-      }
 
-      if (!board.isEmpty(toRow, toCol) && !board.isEnemy(toRow, toCol, color)) {
+      if (!board.isEmpty(toRow, toCol) && !board.isEnemy(toRow, toCol, color))
         continue;
-      }
 
       kingMoves.add(new Move(
           new Position(pos.row, pos.col),
           new Position(toRow, toCol)));
     }
-
+    kingMoves.addAll(genCastlingMoves(pos, board, castlingRights));
     return kingMoves;
   }
 
@@ -230,4 +233,45 @@ public class MoveGenerator {
     return queenMoves;
   }
 
+  // special moves
+  private List<Move> genCastlingMoves(Position pos, Board board, CastlingRights cr) {
+    if (cr == null)
+      return new ArrayList<>();
+    ArrayList<Move> castlingMoves = new ArrayList<>();
+    char color = board.getPiece(pos.row, pos.col).charAt(0);
+    int row = pos.row;
+
+    boolean kingMoved = (color == 'w') ? cr.whiteKingMoved : cr.blackKingMoved;
+    if (kingMoved)
+      return castlingMoves;
+
+    // kingside castling
+    boolean kingSideRookMoved = (color == 'w') ? cr.whiteKingSideRookMoved : cr.blackKingSideRookMoved;
+    if (!kingSideRookMoved
+        && board.getPiece(row, 7) != null
+        && board.getPiece(row, 7).charAt(1) == 'R'
+        && board.isEmpty(row, 5)
+        && board.isEmpty(row, 6)
+        && !checkGenerator.isSquareAttacked(row, 5, color, board)
+        && !checkGenerator.isSquareAttacked(row, 6, color, board)
+        && !checkGenerator.isInCheck(color, board, null)) {
+      castlingMoves.add(new Move(pos, new Position(row, 6)));
+    }
+
+    // queenside castling
+    boolean queenSideRookMoved = (color == 'w') ? cr.whiteQueenSideRookMoved : cr.blackQueenSideRookMoved;
+    if (!queenSideRookMoved
+        && board.getPiece(row, 0) != null
+        && board.getPiece(row, 0).charAt(1) == 'R'
+        && board.isEmpty(row, 1)
+        && board.isEmpty(row, 2)
+        && board.isEmpty(row, 3)
+        && !checkGenerator.isSquareAttacked(row, 2, color, board)
+        && !checkGenerator.isSquareAttacked(row, 3, color, board)
+        && !checkGenerator.isInCheck(color, board, null)) {
+      castlingMoves.add(new Move(pos, new Position(row, 2)));
+    }
+
+    return castlingMoves;
+  }
 }

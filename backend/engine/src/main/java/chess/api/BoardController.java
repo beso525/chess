@@ -75,7 +75,10 @@ public class BoardController {
   public List<Map<String, Integer>> getLegalMoves(
       @RequestParam int row,
       @RequestParam int col) {
-    List<Move> moves = legalMovesFilter.filterLegalMoves(new Position(row, col), gameService.getBoard());
+    List<Move> moves = legalMovesFilter.filterLegalMoves(
+        new Position(row, col),
+        gameService.getBoard(),
+        gameService.getCastlingRights());
 
     return moves.stream()
         .map(m -> {

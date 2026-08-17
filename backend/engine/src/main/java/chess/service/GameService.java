@@ -3,6 +3,7 @@ package chess.service;
 import org.springframework.stereotype.Service;
 
 import chess.board.Board;
+import chess.model.CastlingRights;
 import chess.movegen.CheckGenerator;
 import chess.rules.GameState;
 import chess.rules.GameStatus;
@@ -13,10 +14,19 @@ public class GameService {
   private final Board board = new Board();
   private final CheckGenerator checkGenerator;
   private final GameState gameState;
+
   private boolean isWhiteTurn = true;
+
   private boolean pendingPromotion = false;
   private int promotionRow = -1;
   private int promotionCol = -1;
+
+  private boolean whiteKingMoved = false;
+  private boolean blackKingMoved = false;
+  private boolean blackKingSideRookMoved = false;
+  private boolean blackQueenSideRookMoved = false;
+  private boolean whiteKingSideRookMoved = false;
+  private boolean whiteQueenSideRookMoved = false;
 
   public Board getBoard() {
     return board;
@@ -45,20 +55,56 @@ public class GameService {
     pendingPromotion = false;
     promotionRow = -1;
     promotionCol = -1;
+    whiteKingMoved = false;
+    blackKingMoved = false;
+    blackKingSideRookMoved = false;
+    blackQueenSideRookMoved = false;
+    whiteKingSideRookMoved = false;
+    whiteQueenSideRookMoved = false;
   }
 
   public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {
     String piece = board.getPiece(fromRow, fromCol);
     char color = piece.charAt(0);
-    char pawn = piece.charAt(1);
+    char type = piece.charAt(1);
+    if (type == 'K') {
+      if (color == 'w') {
+        whiteKingMoved = true;
+      } else {
+        blackKingMoved = true;
+      }
+    }
 
-    if ((color == 'w' && pawn == 'P' && toRow == 0)
-        || (color == 'b' && pawn == 'P' && toRow == 7)) {
+    if (type == 'R') {
+      if (color == 'w') {
+        if (fromCol == 7)
+          whiteKingSideRookMoved = true;
+        if (fromCol == 0)
+          whiteQueenSideRookMoved = true;
+      } else {
+        if (fromCol == 7)
+          blackKingSideRookMoved = true;
+        if (fromCol == 0)
+          blackQueenSideRookMoved = true;
+      }
+    }
+
+    if ((color == 'w' && type == 'P' && toRow == 0)
+        || (color == 'b' && type == 'P' && toRow == 7)) {
       pendingPromotion = true;
       promotionRow = toRow;
       promotionCol = toCol;
     }
     board.movePiece(fromRow, fromCol, toRow, toCol);
+    if (type == 'K' && Math.abs(toCol - fromCol) == 2) {
+      if (toCol == 6) {
+        board.movePiece(fromRow, 7, fromRow, 5);
+      }
+
+      if (toCol == 2) {
+        board.movePiece(fromRow, 0, fromRow, 3);
+      }
+    }
   }
 
   public boolean isWhiteTurn() {
@@ -90,11 +136,41 @@ public class GameService {
 
   public boolean isPlayerInCheck() {
     char kingColor = isWhiteTurn() ? 'w' : 'b';
-    return checkGenerator.isInCheck(kingColor, getBoard());
+    return checkGenerator.isInCheck(kingColor, getBoard(), getCastlingRights());
   }
 
   public GameStatus getGameStatus() {
     char color = isWhiteTurn ? 'w' : 'b';
-    return gameState.evaluate(color, getBoard());
+    return gameState.evaluate(color, getBoard(), getCastlingRights());
+  }
+
+  public boolean getWhiteKingMoved() {
+    return whiteKingMoved;
+  }
+
+  public boolean getBlackKingMoved() {
+    return blackKingMoved;
+  }
+
+  public boolean getWhiteKingSideRookMoved() {
+    return whiteKingSideRookMoved;
+  }
+
+  public boolean getBlackKingSideRookMoved() {
+    return blackKingSideRookMoved;
+  }
+
+  public boolean getWhiteQueenSideRookMoved() {
+    return whiteQueenSideRookMoved;
+  }
+
+  public boolean getBlackQueenSideRookMoved() {
+    return blackQueenSideRookMoved;
+  }
+
+  public CastlingRights getCastlingRights() {
+    return new CastlingRights(
+        whiteKingMoved, whiteKingSideRookMoved, whiteQueenSideRookMoved,
+        blackKingMoved, blackKingSideRookMoved, blackQueenSideRookMoved);
   }
 }

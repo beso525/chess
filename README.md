@@ -17,11 +17,11 @@ I'm building it as a learning project to practice DSA, system design, and full-s
 - [ ] Special rule sets
   - [x] Pawn promotion
   - [x] Check detection
+  - [x] Checkmate / stalemate
 
 ### In Progress
 **Phase 4** 
 - [ ] Special rule sets
-  - [ ] Checkmate / stalemate
   - [ ] Castling
   - [ ] En Passant
 

@@ -5,7 +5,12 @@
   {{ inCheck() }}
 </div>
 <button (click)="resetBoard()">New Game</button>
-
+@if (gameStatus() === 'CHECKMATE') { 
+  <div>Checkmate! {{ whiteTurn() ? 'Black' : 'White' }} wins! </div>
+}
+@if (gameStatus() === 'STALEMATE') { 
+  <div>Stalemate!  </div>
+}
 @if (activeModal()) {
   <div class="promotion-modal">
     @for (piece of promotionPieces; track $index) {
@@ -39,9 +44,6 @@
           }
           @if (isLegalMove(r, f) && cell) {
             <div class="legal-capture"></div>
-          }
-          @if (inCheck()) { 
-            {{ inCheck() }}
           }
         </div>
       }
