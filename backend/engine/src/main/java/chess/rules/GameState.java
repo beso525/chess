@@ -38,10 +38,8 @@ public class GameState {
     }
 
     if (allMoves.isEmpty() && checkGenerator.isInCheck(color, board, castlingRights, enPassantSquare)) {
-      System.out.println("Checkmate");
       return GameStatus.CHECKMATE;
     } else if (allMoves.isEmpty() && !checkGenerator.isInCheck(color, board, castlingRights, enPassantSquare)) {
-      System.out.println("Stalemate");
       return GameStatus.STALEMATE;
     }
     return GameStatus.ONGOING;

@@ -95,9 +95,9 @@ public class GameService {
 
     if ((color == 'w' && type == 'P' && toRow == 0)
         || (color == 'b' && type == 'P' && toRow == 7)) {
-      pendingPromotion = true;
       promotionRow = toRow;
       promotionCol = toCol;
+      pendingPromotion = true;
     }
     board.movePiece(fromRow, fromCol, toRow, toCol);
     if (type == 'K' && Math.abs(toCol - fromCol) == 2) {
@@ -109,7 +109,6 @@ public class GameService {
         board.movePiece(fromRow, 0, fromRow, 3);
       }
     }
-
     if (type == 'P' && Math.abs(toRow - fromRow) == 2) {
       enPassantCol = toCol;
       enPassantRow = (fromRow + toRow) / 2; // ?
@@ -118,7 +117,6 @@ public class GameService {
       enPassantRow = -1;
     }
     if (type == 'P' && fromCol != toCol) {
-      System.out.println("detected");
       int capture = color == 'w' ? toRow + 1 : toRow - 1;
       board.getSquares()[capture][toCol] = null;
     }

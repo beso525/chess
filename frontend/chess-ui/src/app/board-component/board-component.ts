@@ -54,6 +54,9 @@ export class BoardComponent implements OnInit {
             this.whiteTurn.set(res.whiteTurn)
             this.inCheck.set(res.inCheck)
             this.gameStatus.set(res.gameStatus)
+            console.log(res.pendingPromotion)
+            console.log(res.promotionCol)
+            console.log(res.promotionRow)
             if (res.pendingPromotion) {
               this.activeModal.set(true)
               this.promotionCol.set(res.promotionCol)
