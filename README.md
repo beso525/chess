@@ -14,16 +14,15 @@ I'm building it as a learning project to practice DSA, system design, and full-s
 - [x] Piece movement logic
 - [x] Turn based movement
 - [x] Button to reset board
-- [ ] Special rule sets
+- [x] Special rule sets
   - [x] Pawn promotion
-  - [x] Check detection
-  - [x] Checkmate / stalemate
+  - [x] Castling
+  - [x] En Passant
 
 ### In Progress
-**Phase 4** 
-- [ ] Special rule sets
-  - [ ] Castling
-  - [ ] En Passant
+- [ ] Detecting and fixing bugs
+- [ ] UI improvements
+- [ ] Adding sounds
 
 ### Future Features
 - [ ] Chess engine opponent 
@@ -43,7 +42,9 @@ I'm building this project in multiple phases
 - [x] **Phase 1**: Board rendering, connecting backend with frontend
 - [x] **Phase 2**: Click to move
 - [x] **Phase 3**: Piece move generation and legal moves
-- [ ] **Phase 4**: Full rule set, turn based
-- [ ] **Phase 5**: Engine opponent
+- [x] **Phase 4**: Full rule set, turn based
+- [ ] **Phase 5**: Improving UI and adding sounds to moves
+- [ ] **Phase 6**: Adding notations and undo 
+- [ ] **Phase 7**: Engine opponent
 
 ## Updates
