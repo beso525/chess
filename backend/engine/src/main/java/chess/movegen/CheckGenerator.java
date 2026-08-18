@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import chess.board.Board;
 import chess.model.CastlingRights;
+import chess.model.EnPassantSquare;
 import chess.model.Move;
 import chess.model.Position;
 
@@ -18,7 +19,8 @@ public class CheckGenerator {
     this.moveGenerator = moveGenerator;
   }
 
-  public boolean isInCheck(char kingColor, Board board, CastlingRights castlingRights) {
+  public boolean isInCheck(char kingColor, Board board, CastlingRights castlingRights,
+      EnPassantSquare enPassantSquare) {
     // getting king position
     Position kingPos = null;
     for (int r = 0; r < 8; r++) {
@@ -36,7 +38,7 @@ public class CheckGenerator {
         String piece = board.getPiece(r, c);
         if (piece != null && piece.charAt(0) != kingColor) {
           // generate a list of all legal moves
-          List<Move> legalMoves = moveGenerator.genMove(new Position(r, c), board, null);
+          List<Move> legalMoves = moveGenerator.genMove(new Position(r, c), board, null, enPassantSquare);
           // comparing if there's overlap
           for (Move move : legalMoves) {
             if (move.getToPos().row == kingPos.row &&
@@ -50,7 +52,7 @@ public class CheckGenerator {
     return false;
   }
 
-  public boolean isSquareAttacked(int row, int col, char color, Board board) {
+  public boolean isSquareAttacked(int row, int col, char color, Board board, EnPassantSquare enPassantSquare) {
 
     Board tempBoard = board.copy();
 
@@ -67,6 +69,6 @@ public class CheckGenerator {
     }
     tempBoard.getSquares()[row][col] = color + "K";
 
-    return isInCheck(color, board, null);
+    return isInCheck(color, board, null, enPassantSquare);
   }
 }

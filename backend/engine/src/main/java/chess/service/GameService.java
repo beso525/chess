@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import chess.board.Board;
 import chess.model.CastlingRights;
+import chess.model.EnPassantSquare;
 import chess.movegen.CheckGenerator;
 import chess.rules.GameState;
 import chess.rules.GameStatus;
@@ -27,6 +28,9 @@ public class GameService {
   private boolean blackQueenSideRookMoved = false;
   private boolean whiteKingSideRookMoved = false;
   private boolean whiteQueenSideRookMoved = false;
+
+  private int enPassantCol = -1;
+  private int enPassantRow = -1;
 
   public Board getBoard() {
     return board;
@@ -105,6 +109,19 @@ public class GameService {
         board.movePiece(fromRow, 0, fromRow, 3);
       }
     }
+
+    if (type == 'P' && Math.abs(toRow - fromRow) == 2) {
+      enPassantCol = toCol;
+      enPassantRow = (fromRow + toRow) / 2; // ?
+    } else {
+      enPassantCol = -1;
+      enPassantRow = -1;
+    }
+    if (type == 'P' && fromCol != toCol) {
+      System.out.println("detected");
+      int capture = color == 'w' ? toRow + 1 : toRow - 1;
+      board.getSquares()[capture][toCol] = null;
+    }
   }
 
   public boolean isWhiteTurn() {
@@ -136,12 +153,12 @@ public class GameService {
 
   public boolean isPlayerInCheck() {
     char kingColor = isWhiteTurn() ? 'w' : 'b';
-    return checkGenerator.isInCheck(kingColor, getBoard(), getCastlingRights());
+    return checkGenerator.isInCheck(kingColor, getBoard(), getCastlingRights(), getEnPassantSquare());
   }
 
   public GameStatus getGameStatus() {
     char color = isWhiteTurn ? 'w' : 'b';
-    return gameState.evaluate(color, getBoard(), getCastlingRights());
+    return gameState.evaluate(color, getBoard(), getCastlingRights(), getEnPassantSquare());
   }
 
   public boolean getWhiteKingMoved() {
@@ -172,5 +189,9 @@ public class GameService {
     return new CastlingRights(
         whiteKingMoved, whiteKingSideRookMoved, whiteQueenSideRookMoved,
         blackKingMoved, blackKingSideRookMoved, blackQueenSideRookMoved);
+  }
+
+  public EnPassantSquare getEnPassantSquare() {
+    return new EnPassantSquare(enPassantRow, enPassantCol);
   }
 }

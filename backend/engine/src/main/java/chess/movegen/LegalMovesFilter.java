@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import chess.board.Board;
 import chess.model.CastlingRights;
+import chess.model.EnPassantSquare;
 import chess.model.Move;
 import chess.model.Position;
 
@@ -21,12 +22,13 @@ public class LegalMovesFilter {
     this.checkGenerator = checkGenerator;
   }
 
-  public List<Move> filterLegalMoves(Position pos, Board board, CastlingRights castlingRights) {
+  public List<Move> filterLegalMoves(Position pos, Board board, CastlingRights castlingRights,
+      EnPassantSquare enPassantSquare) {
     // get all moves
     if (board.getPiece(pos.row, pos.col) == null) {
       return new ArrayList<>();
     }
-    List<Move> moves = moveGenerator.genMove(pos, board, castlingRights);
+    List<Move> moves = moveGenerator.genMove(pos, board, castlingRights, enPassantSquare);
     List<Move> filteredMoves = new ArrayList<>();
     char color = board.getPiece(pos.row, pos.col).charAt(0);
     // for each move i need a copy of the board
@@ -36,7 +38,7 @@ public class LegalMovesFilter {
       boardCopy.movePiece(move.getFromPos().row, move.getFromPos().col, move.getToPos().row, move.getToPos().col);
       // after that move is made check if the king is in check
       // if not, then i will keep that move in legal moves filter
-      if (!checkGenerator.isInCheck(color, boardCopy, castlingRights)) {
+      if (!checkGenerator.isInCheck(color, boardCopy, castlingRights, enPassantSquare)) {
         filteredMoves.add(move);
       }
     }

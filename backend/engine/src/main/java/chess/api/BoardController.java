@@ -78,7 +78,8 @@ public class BoardController {
     List<Move> moves = legalMovesFilter.filterLegalMoves(
         new Position(row, col),
         gameService.getBoard(),
-        gameService.getCastlingRights());
+        gameService.getCastlingRights(),
+        gameService.getEnPassantSquare());
 
     return moves.stream()
         .map(m -> {

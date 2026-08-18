@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import chess.board.Board;
 import chess.model.CastlingRights;
+import chess.model.EnPassantSquare;
 import chess.model.Move;
 import chess.model.Position;
 
@@ -20,13 +21,13 @@ public class MoveGenerator {
     this.checkGenerator = checkGenerator;
   }
 
-  public List<Move> genMove(Position pos, Board board, CastlingRights castlingRights) {
+  public List<Move> genMove(Position pos, Board board, CastlingRights castlingRights, EnPassantSquare es) {
     String piece = board.getPiece(pos.row, pos.col);
     char type = piece.charAt(1);
 
     return switch (type) {
       case 'K' ->
-        genKingMoves(pos, board, castlingRights);
+        genKingMoves(pos, board, castlingRights, es);
       case 'Q' ->
         genQueenMoves(pos, board);
       case 'R' ->
@@ -36,13 +37,13 @@ public class MoveGenerator {
       case 'N' ->
         genKnightMoves(pos, board);
       case 'P' ->
-        genPawnMoves(pos, board);
+        genPawnMoves(pos, board, es);
       default ->
         new ArrayList<>();
     };
   }
 
-  private List<Move> genKingMoves(Position pos, Board board, CastlingRights castlingRights) {
+  private List<Move> genKingMoves(Position pos, Board board, CastlingRights castlingRights, EnPassantSquare es) {
     ArrayList<Move> kingMoves = new ArrayList<>();
     char color = board.getPiece(pos.row, pos.col).charAt(0);
 
@@ -66,7 +67,7 @@ public class MoveGenerator {
           new Position(pos.row, pos.col),
           new Position(toRow, toCol)));
     }
-    kingMoves.addAll(genCastlingMoves(pos, board, castlingRights));
+    kingMoves.addAll(genCastlingMoves(pos, board, castlingRights, es));
     return kingMoves;
   }
 
@@ -98,7 +99,7 @@ public class MoveGenerator {
     return knightMoves;
   }
 
-  private List<Move> genPawnMoves(Position pos, Board board) {
+  private List<Move> genPawnMoves(Position pos, Board board, EnPassantSquare es) {
     ArrayList<Move> pawnMoves = new ArrayList<>();
     char color = board.getPiece(pos.row, pos.col).charAt(0);
     // check color
@@ -155,6 +156,8 @@ public class MoveGenerator {
             new Position(toRow, pos.col + 1)));
       }
     }
+
+    pawnMoves.addAll(genEnPassantMoves(pos, board, es));
     return pawnMoves;
   }
 
@@ -234,7 +237,7 @@ public class MoveGenerator {
   }
 
   // special moves
-  private List<Move> genCastlingMoves(Position pos, Board board, CastlingRights cr) {
+  private List<Move> genCastlingMoves(Position pos, Board board, CastlingRights cr, EnPassantSquare es) {
     if (cr == null)
       return new ArrayList<>();
     ArrayList<Move> castlingMoves = new ArrayList<>();
@@ -252,9 +255,9 @@ public class MoveGenerator {
         && board.getPiece(row, 7).charAt(1) == 'R'
         && board.isEmpty(row, 5)
         && board.isEmpty(row, 6)
-        && !checkGenerator.isSquareAttacked(row, 5, color, board)
-        && !checkGenerator.isSquareAttacked(row, 6, color, board)
-        && !checkGenerator.isInCheck(color, board, null)) {
+        && !checkGenerator.isSquareAttacked(row, 5, color, board, es)
+        && !checkGenerator.isSquareAttacked(row, 6, color, board, es)
+        && !checkGenerator.isInCheck(color, board, null, es)) {
       castlingMoves.add(new Move(pos, new Position(row, 6)));
     }
 
@@ -266,12 +269,30 @@ public class MoveGenerator {
         && board.isEmpty(row, 1)
         && board.isEmpty(row, 2)
         && board.isEmpty(row, 3)
-        && !checkGenerator.isSquareAttacked(row, 2, color, board)
-        && !checkGenerator.isSquareAttacked(row, 3, color, board)
-        && !checkGenerator.isInCheck(color, board, null)) {
+        && !checkGenerator.isSquareAttacked(row, 2, color, board, es)
+        && !checkGenerator.isSquareAttacked(row, 3, color, board, es)
+        && !checkGenerator.isInCheck(color, board, null, es)) {
       castlingMoves.add(new Move(pos, new Position(row, 2)));
     }
-
     return castlingMoves;
   }
+
+  private List<Move> genEnPassantMoves(Position pos, Board board, EnPassantSquare es) {
+    List<Move> enPassantMoves = new ArrayList<>();
+    char color = board.getPiece(pos.row, pos.col).charAt(0);
+    int findRow = (color == 'w') ? 3 : 4;
+
+    if (!es.isAvailable())
+      return enPassantMoves;
+
+    if (pos.row != findRow)
+      return enPassantMoves;
+
+    if (es.row == pos.row - (color == 'w' ? 1 : -1)
+        && Math.abs(es.col - pos.col) == 1) {
+      enPassantMoves.add(new Move(pos, new Position(es.row, es.col)));
+    }
+    return enPassantMoves;
+  }
+
 }
