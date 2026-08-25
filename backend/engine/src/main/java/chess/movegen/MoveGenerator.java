@@ -259,7 +259,7 @@ public class MoveGenerator {
         && board.isEmpty(row, 6)
         && !checkGenerator.isSquareAttacked(row, 5, color, board, es)
         && !checkGenerator.isSquareAttacked(row, 6, color, board, es)
-        && !checkGenerator.isInCheck(color, board, null, es)) {
+        && !checkGenerator.isInCheck(color, board, cr, es)) {
       castlingMoves.add(new Move(pos, new Position(row, 6)));
     }
 
@@ -273,7 +273,7 @@ public class MoveGenerator {
         && board.isEmpty(row, 3)
         && !checkGenerator.isSquareAttacked(row, 2, color, board, es)
         && !checkGenerator.isSquareAttacked(row, 3, color, board, es)
-        && !checkGenerator.isInCheck(color, board, null, es)) {
+        && !checkGenerator.isInCheck(color, board, cr, es)) {
       castlingMoves.add(new Move(pos, new Position(row, 2)));
     }
     return castlingMoves;

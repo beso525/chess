@@ -1,10 +1,6 @@
-<div class="turn">
-  {{ whiteTurn() ? "White turn": "Black turn"}}
-</div>
-<div>
+<!-- <div>
   {{ inCheck() }}
-</div>
-<button (click)="resetBoard()">New Game</button>
+</div> -->
 @if (gameStatus() === 'CHECKMATE') { 
   <div>Checkmate! {{ whiteTurn() ? 'Black' : 'White' }} wins! </div>
 }
@@ -34,7 +30,6 @@
           class="square" 
           [class.light]="(r + f) % 2 === 0" 
           [class.dark]="(r + f) % 2 !== 0" 
-          [class.selected]="isSelected(r,f)"
           (click)="onSquareClick(r, f)">
           @if(cell) {
             <img [src]="'../assets/' + cell + '.svg'" [alt]="cell" class="filter piece" />

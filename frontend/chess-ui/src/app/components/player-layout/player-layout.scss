@@ -1,0 +1,41 @@
+.player-container {
+  display: block;
+}
+
+.player-wrap {
+  display: flex;
+  height: 100%;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.player-avatar {
+  margin-right: 1rem;
+  overflow: hidden;
+  position: relative;
+  background-color: #8EA4D2;
+  border: 1px solid rgba(0, 0, 0, 0.288);
+  border-radius: 20%;
+}
+
+.player-avatar>img {
+  height: 2.5rem;
+}
+
+.player-info-container {
+  display: flex;
+}
+
+.player-info {
+  display: flex;
+  padding: 5px 0px;
+}
+
+.player-name {
+  margin: 0;
+  padding: 0;
+  max-width: 30rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

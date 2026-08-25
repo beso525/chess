@@ -1,5 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { ChessApiService } from '../services/chess-api.service';
+import { Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
+import { ChessApiService } from '../../services/chess-api.service';
 
 @Component({
   selector: 'app-board-component',
@@ -8,6 +8,8 @@ import { ChessApiService } from '../services/chess-api.service';
   styleUrl: './board-component.scss',
 })
 export class BoardComponent implements OnInit {
+  @Output() gameReset = new EventEmitter<void>();
+
   selected: { row: number, col: number } | null = null;
   squares = signal<(string | null)[][]>([]);
   legalMoves = signal<{ toRow: number; toCol: number }[]>([]);
@@ -32,6 +34,7 @@ export class BoardComponent implements OnInit {
       error: err => console.error('failed to load board', err)
     });
   }
+
   onSquareClick(row: number, col: number): void {
     if (this.activeModal()) {
       return;
@@ -117,6 +120,7 @@ export class BoardComponent implements OnInit {
         this.promotionCol.set(-1)
         this.promotionRow.set(-1)
         this.promotionColor.set('')
+        this.gameReset.emit()
       },
       error: err => console.error(err, "err"),
     })
@@ -145,6 +149,4 @@ export class BoardComponent implements OnInit {
       error: err => console.error(err)
     })
   }
-
-
 }

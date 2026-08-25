@@ -1,6 +1,6 @@
 .board {
   position: relative;
-  border: 1px solid black;
+  border: 1px solid rgba(0, 0, 0, 0.281);
   width: fit-content;
   justify-self: center;
 }
@@ -25,16 +25,16 @@
 }
 
 .light {
-  background-color: rgb(238, 238, 210);
+  background-color: #f0d9b5;
 }
 
 .dark {
-  background-color: rgb(118, 150, 86);
+  background-color: #b58863;
 }
 
 .square {
-  height: 5rem;
-  width: 5rem;
+  height: 5.5rem;
+  width: 5.5rem;
 }
 
 .legal-dot {

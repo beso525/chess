@@ -1,1 +1,16 @@
-<app-board-component></app-board-component>
+<div class="board-main-layout">
+  <div class="player-top">
+    <div class="player-row-component">
+      <app-player-layout playerName="Player 2" [isBottom]="false"></app-player-layout>
+    </div>
+  </div>
+  <app-board-component #board></app-board-component>
+  <div class="player-bottom">
+    <div class="player-row-component">
+      <app-player-layout playerName="Player 1" [isBottom]="true"></app-player-layout>
+    </div>
+  </div>
+  <div>
+    <button class="restart-btn" (click)="board.resetBoard()">Reset Board</button>
+  </div>
+</div>

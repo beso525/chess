@@ -1,0 +1,28 @@
+.board-main-layout {
+  position: relative;
+  width: fit-content;
+  justify-self: center;
+}
+
+.player-top .player-bottom {
+  flex-shrink: 0;
+  height: 4rem;
+  margin: 0 auto;
+  position: relative;
+  width: auto;
+}
+
+.restart-btn {
+  width: 100%;
+  min-height: auto;
+  height: 2rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.151);
+  background: linear-gradient(45deg, #8EA4D2 24%, #6279B8 79%);
+  font-size: larger;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.restart-btn:hover {
+  cursor: pointer;
+}

@@ -122,5 +122,4 @@ public class BoardController {
   public boolean isKingInCheck() {
     return gameService.isPlayerInCheck();
   }
-
 }
