@@ -11,7 +11,7 @@
   <div class="promotion-modal">
     @for (piece of promotionPieces; track $index) {
       <img
-        [src]="'../assets/' + promotionColor() + piece + '.svg'"
+        [src]="'../assets/' + promotionColor() + piece + '.png'"
         [alt]="piece"
         class="promotion-piece"
         (click)="promotePawn(piece)"
@@ -32,7 +32,7 @@
           [class.dark]="(r + f) % 2 !== 0" 
           (click)="onSquareClick(r, f)">
           @if(cell) {
-            <img [src]="'../assets/' + cell + '.svg'" [alt]="cell" class="filter piece" />
+            <img [src]="'../assets/' + cell + '.png'" [alt]="cell" class="filter piece" />
           }
           @if (isLegalMove(r, f) && !cell) {
             <div class="legal-dot"></div>

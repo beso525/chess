@@ -1,6 +1,7 @@
 .board {
   position: relative;
   border: 1px solid rgba(0, 0, 0, 0.281);
+  box-shadow: 0px 0px 20px 5px #00000070;
   width: fit-content;
   justify-self: center;
 }
@@ -25,11 +26,12 @@
 }
 
 .light {
-  background-color: #f0d9b5;
+  background-color: #9a8c98;
+
 }
 
 .dark {
-  background-color: #b58863;
+  background-color: #4a4e69;
 }
 
 .square {

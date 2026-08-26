@@ -2,6 +2,7 @@
   position: relative;
   width: fit-content;
   justify-self: center;
+  align-content: center;
 }
 
 .player-top .player-bottom {
@@ -17,8 +18,8 @@
   min-height: auto;
   height: 2rem;
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.151);
-  background: linear-gradient(45deg, #8EA4D2 24%, #6279B8 79%);
+  border: 1px solid rgb(226, 222, 222);
+  background: linear-gradient(45deg, #4a4e69 24%, #9a8c98 79%);
   font-size: larger;
   font-family: Georgia, 'Times New Roman', Times, serif;
 }

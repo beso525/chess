@@ -192,4 +192,5 @@ public class GameService {
   public EnPassantSquare getEnPassantSquare() {
     return new EnPassantSquare(enPassantRow, enPassantCol);
   }
+
 }
