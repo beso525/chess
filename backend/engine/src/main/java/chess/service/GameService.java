@@ -99,7 +99,10 @@ public class GameService {
       promotionCol = toCol;
       pendingPromotion = true;
     }
+
+    boolean isEnPassant = type == 'P' && fromCol != toCol && board.getPiece(toRow, toCol) == null;
     board.movePiece(fromRow, fromCol, toRow, toCol);
+
     if (type == 'K' && Math.abs(toCol - fromCol) == 2) {
       if (toCol == 6) {
         board.movePiece(fromRow, 7, fromRow, 5);
@@ -109,14 +112,15 @@ public class GameService {
         board.movePiece(fromRow, 0, fromRow, 3);
       }
     }
+
     if (type == 'P' && Math.abs(toRow - fromRow) == 2) {
       enPassantCol = toCol;
-      enPassantRow = (fromRow + toRow) / 2; // ?
+      enPassantRow = (fromRow + toRow) / 2;
     } else {
       enPassantCol = -1;
       enPassantRow = -1;
     }
-    if (type == 'P' && fromCol != toCol) {
+    if (isEnPassant) {
       int capture = color == 'w' ? toRow + 1 : toRow - 1;
       board.getSquares()[capture][toCol] = null;
     }

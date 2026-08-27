@@ -11,8 +11,7 @@
 }
 
 .piece {
-  height: 100%;
-  width: 85%;
+  width: 80%;
   display: block;
   justify-self: center;
 }
@@ -37,6 +36,7 @@
 .square {
   height: 5.5rem;
   width: 5.5rem;
+  align-content: center;
 }
 
 .legal-dot {
@@ -45,7 +45,7 @@
   height: 30%;
   background: rgba($color: black, $alpha: 0.3);
   border-radius: 50%;
-  top: 50%;
+  top: 15%;
   left: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -60,7 +60,7 @@
   border-radius: 50%;
   border: 3px solid rgba($color: #000000, $alpha: 0.3);
   box-sizing: border-box;
-  top: -100%;
+  top: -80%;
   pointer-events: none;
 }
 
@@ -89,8 +89,7 @@
   border-radius: 4px;
 }
 
-.cell .checked-king {
-  background-color: rgba($color: red, $alpha: 0.5);
-  height: 100%;
-  width: 100%;
+.square.in-check {
+  background-color: rgba(221, 72, 72, 0.897);
+  transition: 100ms;
 }

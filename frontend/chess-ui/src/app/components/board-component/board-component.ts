@@ -149,4 +149,12 @@ export class BoardComponent implements OnInit {
       error: err => console.error(err)
     })
   }
+
+  isKingInCheck(row: number, col: number): boolean {
+    if (!this.inCheck()) return false;
+    const piece = this.squares()[row][col];
+    if (!piece) return false;
+    const kingColor = this.whiteTurn() ? 'wK' : 'bK';
+    return piece === kingColor;
+  }
 }

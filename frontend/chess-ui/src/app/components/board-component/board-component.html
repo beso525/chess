@@ -30,6 +30,7 @@
           class="square" 
           [class.light]="(r + f) % 2 === 0" 
           [class.dark]="(r + f) % 2 !== 0" 
+          [class.in-check]="isKingInCheck(r, f)"
           (click)="onSquareClick(r, f)">
           @if(cell) {
             <img [src]="'../assets/' + cell + '.png'" [alt]="cell" class="filter piece" />
