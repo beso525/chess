@@ -48,8 +48,8 @@ I'm building this project in multiple phases
 - [ ] **Phase 7**: Engine opponent
 
 ## Bugs found
-- En passant rules sometimes go into effect if a pawn captures a piece that's behind an  enemy pawn, even if the timing passed, also it sometimes just does it on regular pieces?
 - Castling can still occur even if the square immediately next to the king is seen by an enemy piece
 - If it's one player's turn and they click on their pieces then immediately click on a piece from an enemy, it shows that its the enemy's turn. (it should show no moves) however, the backend prevents any incorrect turn moves.
 
 ## Bugs fixed
+- En passant rules sometimes go into effect if a pawn captures a piece that's behind an  enemy pawn, even if the timing passed, also it sometimes just does it on regular pieces. [FIXED] I added a check to detect if the en passant square is empty, which seems to have fixed the problem.
