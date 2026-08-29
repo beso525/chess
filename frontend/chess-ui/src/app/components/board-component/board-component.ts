@@ -22,6 +22,8 @@ export class BoardComponent implements OnInit {
   promotionPieces: string[] = ['Q', 'N', 'B', 'R'];
   inCheck = signal<boolean>(false);
   gameStatus = signal<string>("ONGOING");
+  whiteCaptures = signal<string[]>([]);
+  blackCaptures = signal<string[]>([]);
 
   constructor(private api: ChessApiService) { }
 
@@ -39,7 +41,6 @@ export class BoardComponent implements OnInit {
     if (this.activeModal()) {
       return;
     }
-    console.log("row " + row + " col " + col)
     if (this.selected) {
       if (this.isLegalMove(row, col)) {
         const from = this.selected;
@@ -57,9 +58,10 @@ export class BoardComponent implements OnInit {
             this.whiteTurn.set(res.whiteTurn)
             this.inCheck.set(res.inCheck)
             this.gameStatus.set(res.gameStatus)
-            console.log(res.pendingPromotion)
-            console.log(res.promotionCol)
-            console.log(res.promotionRow)
+            this.whiteCaptures.set(res.whiteCaptures)
+            this.blackCaptures.set(res.blackCaptures)
+            console.log(this.blackCaptures())
+            console.log(this.whiteCaptures())
             if (res.pendingPromotion) {
               this.activeModal.set(true)
               this.promotionCol.set(res.promotionCol)
@@ -120,6 +122,8 @@ export class BoardComponent implements OnInit {
         this.promotionCol.set(-1)
         this.promotionRow.set(-1)
         this.promotionColor.set('')
+        this.whiteCaptures.set([])
+        this.blackCaptures.set([])
         this.gameReset.emit()
       },
       error: err => console.error(err, "err"),
@@ -133,7 +137,6 @@ export class BoardComponent implements OnInit {
       piece: piece,
     }).subscribe({
       next: res => {
-        console.log(res)
         this.pendingPromotion.set(false)
         this.activeModal.set(false)
         this.promotionCol.set(-1)

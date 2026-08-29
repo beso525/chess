@@ -1,5 +1,7 @@
 package chess.model;
 
+import java.util.List;
+
 import chess.rules.GameStatus;
 
 public class BoardResponse {
@@ -11,6 +13,8 @@ public class BoardResponse {
   private int promotionCol;
   private boolean inCheck;
   private GameStatus gameStatus;
+  private List<String> whiteCaptures;
+  private List<String> blackCaptures;
 
   public BoardResponse(
       String[][] squares,
@@ -19,7 +23,9 @@ public class BoardResponse {
       int promotionRow,
       int promotionCol,
       boolean inCheck,
-      GameStatus gameStatus) {
+      GameStatus gameStatus,
+      List<String> whiteCaptures,
+      List<String> blackCaptures) {
     this.squares = squares;
     this.whiteTurn = whiteTurn;
     this.pendingPromotion = pendingPromotion;
@@ -27,6 +33,8 @@ public class BoardResponse {
     this.promotionCol = promotionCol;
     this.inCheck = inCheck;
     this.gameStatus = gameStatus;
+    this.whiteCaptures = whiteCaptures;
+    this.blackCaptures = blackCaptures;
   }
 
   public String[][] getSquares() {
@@ -57,4 +65,11 @@ public class BoardResponse {
     return gameStatus;
   }
 
+  public List<String> getWhiteCaptures() {
+    return whiteCaptures;
+  }
+
+  public List<String> getBlackCaptures() {
+    return blackCaptures;
+  }
 }

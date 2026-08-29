@@ -16,6 +16,7 @@
   background-color: #22223b;
   border: 1px solid rgba(0, 0, 0, 0.288);
   border-radius: 8px;
+  align-self: center;
 }
 
 .player-avatar>img {
@@ -25,6 +26,7 @@
 
 .player-info-container {
   display: flex;
+  flex-direction: column;
 }
 
 .player-info {
@@ -39,4 +41,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: x-large;
+}
+
+.captured-pieces {
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  opacity: 0.8;
 }

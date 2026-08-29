@@ -9,7 +9,11 @@
           {{ playerName }}
         </div>
       </div>
-      <div class="captured-pieces"></div>
+      <div class="captured-pieces">
+        @for (piece of capturedPieces; track $index) {
+          <img [src]="'assets/' + piece + '.png'" [alt]="piece" class="captured-piece"/>
+        }
+      </div>
     </div>
   </div>
 </div>

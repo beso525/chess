@@ -9,4 +9,5 @@ import { Component, Input } from '@angular/core';
 export class PlayerLayout {
   @Input() playerName: string = "Player";
   @Input() isBottom: boolean = false;
+  @Input() capturedPieces: string[] = [];
 }

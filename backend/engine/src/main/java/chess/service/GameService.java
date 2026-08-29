@@ -47,14 +47,6 @@ public class GameService {
     this.gameState = gameState;
   }
 
-  public int getPromotionRow() {
-    return promotionRow;
-  }
-
-  public int getPromotionCol() {
-    return promotionCol;
-  }
-
   public boolean isPendingPromotion() {
     return pendingPromotion;
   }
@@ -190,6 +182,7 @@ public class GameService {
     return checkGenerator.isInCheck(kingColor, getBoard(), getCastlingRights(), getEnPassantSquare());
   }
 
+  // GETTERS
   public GameStatus getGameStatus() {
     char color = isWhiteTurn ? 'w' : 'b';
     return gameState.evaluate(color, getBoard(), getCastlingRights(), getEnPassantSquare());
@@ -229,4 +222,19 @@ public class GameService {
     return new EnPassantSquare(enPassantRow, enPassantCol);
   }
 
+  public int getPromotionRow() {
+    return promotionRow;
+  }
+
+  public int getPromotionCol() {
+    return promotionCol;
+  }
+
+  public List<String> getWhiteCaptures() {
+    return whiteCaptures;
+  }
+
+  public List<String> getBlackCaptures() {
+    return blackCaptures;
+  }
 }
