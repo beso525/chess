@@ -69,6 +69,6 @@ public class CheckGenerator {
     }
     tempBoard.getSquares()[row][col] = color + "K";
 
-    return isInCheck(color, board, null, enPassantSquare);
+    return isInCheck(color, tempBoard, null, enPassantSquare);
   }
 }

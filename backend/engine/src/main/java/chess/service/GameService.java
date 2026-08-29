@@ -103,6 +103,9 @@ public class GameService {
     boolean isEnPassant = type == 'P' && fromCol != toCol && board.getPiece(toRow, toCol) == null;
     board.movePiece(fromRow, fromCol, toRow, toCol);
 
+    // if (toRow & toCol) is an enemy piece
+    // register that that is a capture
+    // save it to a list
     if (type == 'K' && Math.abs(toCol - fromCol) == 2) {
       if (toCol == 6) {
         board.movePiece(fromRow, 7, fromRow, 5);

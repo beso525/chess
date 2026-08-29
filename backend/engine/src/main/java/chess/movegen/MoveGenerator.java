@@ -257,10 +257,13 @@ public class MoveGenerator {
         && board.getPiece(row, 7).charAt(1) == 'R'
         && board.isEmpty(row, 5)
         && board.isEmpty(row, 6)
-        && !checkGenerator.isSquareAttacked(row, 5, color, board, es)
         && !checkGenerator.isSquareAttacked(row, 6, color, board, es)
+        && !checkGenerator.isSquareAttacked(row, 5, color, board, es)
         && !checkGenerator.isInCheck(color, board, cr, es)) {
+      System.out.println(!checkGenerator.isSquareAttacked(row, 5, color, board, es));
+      System.out.println(!checkGenerator.isSquareAttacked(row, 6, color, board, es));
       castlingMoves.add(new Move(pos, new Position(row, 6)));
+      System.out.println(castlingMoves.get(0).toString());
     }
 
     // queenside castling
@@ -272,7 +275,7 @@ public class MoveGenerator {
         && board.isEmpty(row, 2)
         && board.isEmpty(row, 3)
         && !checkGenerator.isSquareAttacked(row, 2, color, board, es)
-        && !checkGenerator.isSquareAttacked(row, 3, color, board, es)
+        // && !checkGenerator.isSquareAttacked(row, 3, color, board, es)
         && !checkGenerator.isInCheck(color, board, cr, es)) {
       castlingMoves.add(new Move(pos, new Position(row, 2)));
     }

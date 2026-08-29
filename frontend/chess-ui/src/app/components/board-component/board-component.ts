@@ -39,7 +39,7 @@ export class BoardComponent implements OnInit {
     if (this.activeModal()) {
       return;
     }
-
+    console.log("row " + row + " col " + col)
     if (this.selected) {
       if (this.isLegalMove(row, col)) {
         const from = this.selected;
