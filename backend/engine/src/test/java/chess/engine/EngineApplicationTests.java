@@ -1,15 +1,26 @@
 package chess.engine;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import chess.board.Board;
+import chess.model.CastlingRights;
+import chess.model.EnPassantSquare;
+import chess.movegen.CheckGenerator;
+import chess.movegen.LegalMovesFilter;
+import chess.movegen.MoveGenerator;
+import chess.rules.GameState;
+import chess.rules.GameStatus;
 
 @SpringBootTest
 class EngineApplicationTests {
 
   private Board board;
+  private GameState gamestate;
+  private CastlingRights castlingRights;
+  private EnPassantSquare enPassantSquare;
 
   @BeforeEach
   void setUp() {
@@ -19,16 +30,24 @@ class EngineApplicationTests {
         board.getSquares()[r][c] = null;
       }
     }
+
+    MoveGenerator moveGenerator = new MoveGenerator(null);
+    CheckGenerator checkGenerator = new CheckGenerator(moveGenerator);
+    LegalMovesFilter legalMovesFilter = new LegalMovesFilter(moveGenerator, checkGenerator);
+    gamestate = new GameState(legalMovesFilter, checkGenerator);
+
+    castlingRights = new CastlingRights(true, true, true, true, true, true);
+    enPassantSquare = new EnPassantSquare(-1, -1);
   }
 
   @Test
   void checkingForStaleMate() {
-    setUp();
-    board.getSquares()[7][4] = "wK";
-    board.getSquares()[7][5] = "wN";
-    board.getSquares()[7][7] = "wR";
+    board.getSquares()[0][0] = "wK";
 
-    board.getSquares()[7][0] = "wR";
+    board.getSquares()[1][2] = "bQ";
+    board.getSquares()[2][1] = "bK";
+
+    GameStatus status = gamestate.evaluate('w', board, castlingRights, enPassantSquare);
+    assertEquals(GameStatus.CHECKMATE, status);
   }
-
 }

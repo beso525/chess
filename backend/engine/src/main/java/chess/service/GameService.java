@@ -1,5 +1,8 @@
 package chess.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import chess.board.Board;
@@ -31,6 +34,9 @@ public class GameService {
 
   private int enPassantCol = -1;
   private int enPassantRow = -1;
+
+  private List<String> whiteCaptures = new ArrayList<>();
+  private List<String> blackCaptures = new ArrayList<>();
 
   public Board getBoard() {
     return board;
@@ -65,12 +71,15 @@ public class GameService {
     blackQueenSideRookMoved = false;
     whiteKingSideRookMoved = false;
     whiteQueenSideRookMoved = false;
+    whiteCaptures.clear();
+    blackCaptures.clear();
   }
 
   public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {
     String piece = board.getPiece(fromRow, fromCol);
     char color = piece.charAt(0);
     char type = piece.charAt(1);
+    // check if king has moved
     if (type == 'K') {
       if (color == 'w') {
         whiteKingMoved = true;
@@ -79,6 +88,7 @@ public class GameService {
       }
     }
 
+    // check if and which rooks have moved
     if (type == 'R') {
       if (color == 'w') {
         if (fromCol == 7)
@@ -93,6 +103,7 @@ public class GameService {
       }
     }
 
+    // check for promotion
     if ((color == 'w' && type == 'P' && toRow == 0)
         || (color == 'b' && type == 'P' && toRow == 7)) {
       promotionRow = toRow;
@@ -101,21 +112,40 @@ public class GameService {
     }
 
     boolean isEnPassant = type == 'P' && fromCol != toCol && board.getPiece(toRow, toCol) == null;
+
+    // save captured pieces to a list
+    String capturedPiece = board.getPiece(toRow, toCol);
+    if (capturedPiece != null && capturedPiece.charAt(0) != color) {
+      capture(color, capturedPiece);
+      System.out.print("Black captured: ");
+      for (int i = 0; i < blackCaptures.size(); i++) {
+        System.out.print(blackCaptures.get(i) + ", ");
+      }
+      System.out.println();
+      System.out.print("White captured: ");
+      for (int i = 0; i < whiteCaptures.size(); i++) {
+        System.out.print(whiteCaptures.get(i) + ", ");
+      }
+      System.out.println();
+      System.out.println();
+    }
+
     board.movePiece(fromRow, fromCol, toRow, toCol);
 
-    // if (toRow & toCol) is an enemy piece
-    // register that that is a capture
-    // save it to a list
+    // *** AFTER A PIECE HAS MOVED *** //
+    // check if it's the king moving 2 spaces to cue castling
     if (type == 'K' && Math.abs(toCol - fromCol) == 2) {
+      // where the rook moves if the king castled king side
       if (toCol == 6) {
         board.movePiece(fromRow, 7, fromRow, 5);
       }
-
+      // and where it moves if the king castled queen side
       if (toCol == 2) {
         board.movePiece(fromRow, 0, fromRow, 3);
       }
     }
 
+    // check if the pawn that moved
     if (type == 'P' && Math.abs(toRow - fromRow) == 2) {
       enPassantCol = toCol;
       enPassantRow = (fromRow + toRow) / 2;
@@ -124,8 +154,18 @@ public class GameService {
       enPassantRow = -1;
     }
     if (isEnPassant) {
-      int capture = color == 'w' ? toRow + 1 : toRow - 1;
-      board.getSquares()[capture][toCol] = null;
+      int capturedPawnRow = color == 'w' ? toRow + 1 : toRow - 1;
+      String enPassantCapture = board.getPiece(capturedPawnRow, toCol);
+      board.getSquares()[capturedPawnRow][toCol] = null;
+      capture(color, enPassantCapture);
+    }
+  }
+
+  public void capture(char capturingColor, String capturedPiece) {
+    if (capturingColor == 'w') {
+      whiteCaptures.add(capturedPiece);
+    } else {
+      blackCaptures.add(capturedPiece);
     }
   }
 
