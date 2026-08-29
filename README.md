@@ -54,6 +54,6 @@ I'm building this project in multiple phases
 
 ## Bugs fixed
 - En passant rules sometimes go into effect if a pawn captures a piece that's behind an  enemy pawn, even if the timing passed, also it sometimes just does it on regular pieces.<br/>
-  [FIXED] I added a check to detect if the en passant square is empty, which seems to have fixed the problem.
+  - [FIXED] I added a check to detect if the en passant square is empty, which seems to have fixed the problem.
 - Castling can still occur even if the square immediately next to the king is seen by an enemy piece. <br/>
-  [FIXED] in my isSquareAttacked method, i was creating a temp board to check all moves that could produce a check but then using the regular board instead of the temp one.
+  - [FIXED] in my isSquareAttacked method, i was creating a temp board to check all moves that could produce a check but then using the regular board instead of the temp one.
