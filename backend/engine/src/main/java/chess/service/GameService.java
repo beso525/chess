@@ -117,17 +117,6 @@ public class GameService {
     String capturedPiece = board.getPiece(toRow, toCol);
     if (capturedPiece != null && capturedPiece.charAt(0) != color) {
       capture(color, capturedPiece);
-      System.out.print("Black captured: ");
-      for (int i = 0; i < blackCaptures.size(); i++) {
-        System.out.print(blackCaptures.get(i) + ", ");
-      }
-      System.out.println();
-      System.out.print("White captured: ");
-      for (int i = 0; i < whiteCaptures.size(); i++) {
-        System.out.print(whiteCaptures.get(i) + ", ");
-      }
-      System.out.println();
-      System.out.println();
     }
 
     board.movePiece(fromRow, fromCol, toRow, toCol);

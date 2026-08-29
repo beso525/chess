@@ -260,10 +260,7 @@ public class MoveGenerator {
         && !checkGenerator.isSquareAttacked(row, 6, color, board, es)
         && !checkGenerator.isSquareAttacked(row, 5, color, board, es)
         && !checkGenerator.isInCheck(color, board, cr, es)) {
-      System.out.println(!checkGenerator.isSquareAttacked(row, 5, color, board, es));
-      System.out.println(!checkGenerator.isSquareAttacked(row, 6, color, board, es));
       castlingMoves.add(new Move(pos, new Position(row, 6)));
-      System.out.println(castlingMoves.get(0).toString());
     }
 
     // queenside castling
