@@ -31,6 +31,7 @@ public class GameService {
   private boolean blackQueenSideRookMoved = false;
   private boolean whiteKingSideRookMoved = false;
   private boolean whiteQueenSideRookMoved = false;
+  private boolean isCastling = false;
 
   private int enPassantCol = -1;
   private int enPassantRow = -1;
@@ -65,9 +66,11 @@ public class GameService {
     whiteQueenSideRookMoved = false;
     whiteCaptures.clear();
     blackCaptures.clear();
+    isCastling = false;
   }
 
   public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {
+    isCastling = false;
     String piece = board.getPiece(fromRow, fromCol);
     char color = piece.charAt(0);
     char type = piece.charAt(1);
@@ -115,7 +118,8 @@ public class GameService {
 
     // *** AFTER A PIECE HAS MOVED *** //
     // check if it's the king moving 2 spaces to cue castling
-    if (type == 'K' && Math.abs(toCol - fromCol) == 2) {
+    isCastling = type == 'K' && Math.abs(toCol - fromCol) == 2;
+    if (isCastling) {
       // where the rook moves if the king castled king side
       if (toCol == 6) {
         board.movePiece(fromRow, 7, fromRow, 5);
@@ -212,6 +216,10 @@ public class GameService {
     return blackQueenSideRookMoved;
   }
 
+  public boolean getIsCastling() {
+    return isCastling;
+  }
+
   public CastlingRights getCastlingRights() {
     return new CastlingRights(
         whiteKingMoved, whiteKingSideRookMoved, whiteQueenSideRookMoved,
@@ -237,4 +245,5 @@ public class GameService {
   public List<String> getBlackCaptures() {
     return blackCaptures;
   }
+
 }

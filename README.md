@@ -1,7 +1,7 @@
 # Chess
 
 A full stack chess engine built using Java (Spring Boot) and Angular.
-I'm building it as a learning project to practice DSA, system design, and full-stack development.
+I'm building it as a learning project to practice DSA, OOP, system design, and full-stack development.
 
 ## Tech Stack
 - *Backend*: Java, Spring Boot, Maven
@@ -18,17 +18,15 @@ I'm building it as a learning project to practice DSA, system design, and full-s
   - [x] Pawn promotion
   - [x] Castling
   - [x] En Passant
-- [x] UI improvements
+- [x] UI and sounds
 - [x] Capture logic
 
 ### In Progress
-- [ ] Adding sounds
 - [ ] Back move and notations
-- [ ] Evaluation bar
+- [ ] Chess engine opponent  
+  - [ ] Evaluation bar
 
 ### Future Features
-- [ ] Chess engine opponent 
-  - [ ] With future tests to determine chess rating vs stockfish
 - [ ] Player vs computer mode
 
 ## DSA concepts used
@@ -45,6 +43,6 @@ I'm building this project in multiple phases
 - [x] **Phase 2**: Click to move
 - [x] **Phase 3**: Piece move generation and legal moves
 - [x] **Phase 4**: Full rule set, turn based
-- [ ] **Phase 5**: Improving UI and adding sounds to moves
+- [x] **Phase 5**: Improving UI and adding sounds to moves
 - [ ] **Phase 6**: Adding notations and undo 
 - [ ] **Phase 7**: Engine opponent

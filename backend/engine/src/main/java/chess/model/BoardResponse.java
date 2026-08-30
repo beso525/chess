@@ -9,9 +9,10 @@ public class BoardResponse {
   private String[][] squares;
   private boolean whiteTurn;
   private boolean pendingPromotion;
+  private boolean wasCastling;
+  private boolean inCheck;
   private int promotionRow;
   private int promotionCol;
-  private boolean inCheck;
   private GameStatus gameStatus;
   private List<String> whiteCaptures;
   private List<String> blackCaptures;
@@ -20,18 +21,20 @@ public class BoardResponse {
       String[][] squares,
       boolean whiteTurn,
       boolean pendingPromotion,
+      boolean wasCastling,
+      boolean inCheck,
       int promotionRow,
       int promotionCol,
-      boolean inCheck,
       GameStatus gameStatus,
       List<String> whiteCaptures,
       List<String> blackCaptures) {
     this.squares = squares;
     this.whiteTurn = whiteTurn;
     this.pendingPromotion = pendingPromotion;
+    this.wasCastling = wasCastling;
+    this.inCheck = inCheck;
     this.promotionRow = promotionRow;
     this.promotionCol = promotionCol;
-    this.inCheck = inCheck;
     this.gameStatus = gameStatus;
     this.whiteCaptures = whiteCaptures;
     this.blackCaptures = blackCaptures;
@@ -55,6 +58,10 @@ public class BoardResponse {
 
   public boolean isPendingPromotion() {
     return pendingPromotion;
+  }
+
+  public boolean getWasCastling() {
+    return wasCastling;
   }
 
   public boolean isInCheck() {

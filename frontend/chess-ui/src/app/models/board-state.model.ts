@@ -4,6 +4,7 @@ export interface BoardResponse {
   pendingPromotion: boolean;
   promotionRow: number;
   promotionCol: number;
+  wasCastling: boolean;
   inCheck: boolean;
   gameStatus: 'ONGOING' | 'CHECKMATE' | 'STALEMATE';
   whiteCaptures: string[];

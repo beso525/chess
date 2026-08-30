@@ -1,9 +1,10 @@
 import { Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
 import { ChessApiService } from '../../services/chess-api.service';
+import { AudioService } from '../../services/audio.service';
+import { BoardResponse } from '../../models/board-state.model';
 
 @Component({
   selector: 'app-board-component',
-  imports: [],
   templateUrl: './board-component.html',
   styleUrl: './board-component.scss',
 })
@@ -25,7 +26,7 @@ export class BoardComponent implements OnInit {
   whiteCaptures = signal<string[]>([]);
   blackCaptures = signal<string[]>([]);
 
-  constructor(private api: ChessApiService) { }
+  constructor(private api: ChessApiService, private audio: AudioService) { }
 
   ngOnInit(): void {
     this.api.getBoard().subscribe({
@@ -54,14 +55,13 @@ export class BoardComponent implements OnInit {
           toCol: col
         }).subscribe({
           next: res => {
+            this.playSound(res);
             this.squares.set(res.squares)
             this.whiteTurn.set(res.whiteTurn)
             this.inCheck.set(res.inCheck)
             this.gameStatus.set(res.gameStatus)
             this.whiteCaptures.set(res.whiteCaptures)
             this.blackCaptures.set(res.blackCaptures)
-            console.log(this.blackCaptures())
-            console.log(this.whiteCaptures())
             if (res.pendingPromotion) {
               this.activeModal.set(true)
               this.promotionCol.set(res.promotionCol)
@@ -87,6 +87,23 @@ export class BoardComponent implements OnInit {
       if (isWhitePiece === this.whiteTurn()) {
         this.selectPiece(row, col);
       }
+    }
+  }
+
+  private playSound(res: BoardResponse): void {
+    if (res.gameStatus == 'CHECKMATE' || res.gameStatus == 'STALEMATE') {
+      this.audio.play('game-end');
+    } else if (res.inCheck) {
+      this.audio.play('check');
+    } else if (res.wasCastling) {
+      this.audio.play('castle');
+    } else if (res.whiteCaptures.length > (this.whiteCaptures()?.length ?? 0)
+      || res.blackCaptures.length > (this.blackCaptures()?.length ?? 0)) {
+      this.audio.play('capture');
+    } else if (res.pendingPromotion === true) {
+      this.audio.play('promote')
+    } else {
+      this.audio.play('move');
     }
   }
 
@@ -148,6 +165,7 @@ export class BoardComponent implements OnInit {
         this.inCheck.set(res.inCheck)
         this.selected = null;
         this.legalMoves.set([]);
+        this.playSound(res);
       },
       error: err => console.error(err)
     })
