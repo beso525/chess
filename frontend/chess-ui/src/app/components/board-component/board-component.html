@@ -1,8 +1,13 @@
 @if (gameStatus() === 'CHECKMATE') { 
-  <div>Checkmate! {{ whiteTurn() ? 'Black' : 'White' }} wins! </div>
+  <div class="checkmate-modal">
+    Checkmate!<br>{{ whiteTurn() ? 'Black' : 'White' }} wins! 
+    <div>
+      <button class="restart-btn" (click)="resetBoard()">Reset Board</button>
+  </div>
+  </div>
 }
 @if (gameStatus() === 'STALEMATE') { 
-  <div>Stalemate!  </div>
+  <div class="stalemate-modal">Stalemate! =(</div>
 }
 @if (activeModal()) {
   <div class="promotion-modal">
@@ -18,17 +23,25 @@
 }
 
 <div class="board">
-  @for (row of squares(); track $index; let r = $index) 
-  {
+  @for (row of squares(); track $index; let r = $index) { 
     <div class="row">
-      @for (cell of row; track $index; let f = $index) 
-      {
+      @for (cell of row; track $index; let f = $index) {
         <div 
           class="square" 
           [class.light]="(r + f) % 2 === 0" 
           [class.dark]="(r + f) % 2 !== 0" 
           [class.in-check]="isKingInCheck(r, f)"
           (click)="onSquareClick(r, f)">
+          <span class="file coordinates">
+            @if (f == 0 && r >= 0 && r < 8) {
+              {{ 8 - r }}
+            }
+          </span>
+          <span class="rank coordinates">
+            @if (r == 7 && f >= 0 && f < 8) {
+              {{ ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'][f] }}
+            }
+          </span>
           @if(cell) {
             <img [src]="'../assets/' + cell + '.png'" [alt]="cell" class="filter piece" />
           }

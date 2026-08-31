@@ -20,6 +20,22 @@
   cursor: grab;
 }
 
+.coordinates {
+  position: absolute;
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.rank {
+  bottom: 3px;
+  right: 5px;
+}
+
+.file {
+  top: 3px;
+  left: 5px;
+}
+
 .filter::selection {
   background-color: black;
 }
@@ -36,6 +52,7 @@
   height: 5.5rem;
   width: 5.5rem;
   align-content: center;
+  position: relative;
 }
 
 .legal-dot {
@@ -63,7 +80,9 @@
   pointer-events: none;
 }
 
-.promotion-modal {
+.promotion-modal,
+.checkmate-modal,
+.stalemate-modal {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -75,6 +94,13 @@
   padding: 12px;
   gap: 8px;
   z-index: 4000;
+}
+
+.checkmate-modal {
+  padding: 2rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: larger;
+  font-weight: 600;
 }
 
 .promotion-piece {
