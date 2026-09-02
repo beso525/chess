@@ -16,6 +16,7 @@ public class BoardResponse {
   private GameStatus gameStatus;
   private List<String> whiteCaptures;
   private List<String> blackCaptures;
+  private List<String> moveHistory;
 
   public BoardResponse(
       String[][] squares,
@@ -27,7 +28,8 @@ public class BoardResponse {
       int promotionCol,
       GameStatus gameStatus,
       List<String> whiteCaptures,
-      List<String> blackCaptures) {
+      List<String> blackCaptures,
+      List<String> moveHistory) {
     this.squares = squares;
     this.whiteTurn = whiteTurn;
     this.pendingPromotion = pendingPromotion;
@@ -38,6 +40,7 @@ public class BoardResponse {
     this.gameStatus = gameStatus;
     this.whiteCaptures = whiteCaptures;
     this.blackCaptures = blackCaptures;
+    this.moveHistory = moveHistory;
   }
 
   public String[][] getSquares() {
@@ -78,5 +81,9 @@ public class BoardResponse {
 
   public List<String> getBlackCaptures() {
     return blackCaptures;
+  }
+
+  public List<String> getMoveHistory() {
+    return moveHistory;
   }
 }

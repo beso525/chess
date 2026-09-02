@@ -1,6 +1,8 @@
 package chess.service;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,7 +10,10 @@ import org.springframework.stereotype.Service;
 import chess.board.Board;
 import chess.model.CastlingRights;
 import chess.model.EnPassantSquare;
+import chess.model.MoveRecord;
+import chess.model.Position;
 import chess.movegen.CheckGenerator;
+import chess.notation.NotationsGenerator;
 import chess.rules.GameState;
 import chess.rules.GameStatus;
 
@@ -39,6 +44,8 @@ public class GameService {
   private List<String> whiteCaptures = new ArrayList<>();
   private List<String> blackCaptures = new ArrayList<>();
 
+  private Deque<MoveRecord> moveHistory = new ArrayDeque<>();
+
   public Board getBoard() {
     return board;
   }
@@ -67,20 +74,29 @@ public class GameService {
     whiteCaptures.clear();
     blackCaptures.clear();
     isCastling = false;
+    moveHistory.clear();
   }
 
   public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {
+    CastlingRights prevCR = getCastlingRights();
+    EnPassantSquare prevES = getEnPassantSquare();
+    String pieceMoved = board.getPiece(fromRow, fromCol);
+    String pieceCaptured = board.getPiece(toRow, toCol);
+    NotationsGenerator notationsGenerator = new NotationsGenerator();
+    String notation = notationsGenerator.generateNotation(
+        new Position(fromRow, fromCol),
+        new Position(toRow, toCol),
+        pieceMoved, pieceCaptured, board);
     isCastling = false;
     String piece = board.getPiece(fromRow, fromCol);
     char color = piece.charAt(0);
     char type = piece.charAt(1);
     // check if king has moved
     if (type == 'K') {
-      if (color == 'w') {
+      if (color == 'w')
         whiteKingMoved = true;
-      } else {
+      else
         blackKingMoved = true;
-      }
     }
 
     // check if and which rooks have moved
@@ -115,6 +131,14 @@ public class GameService {
     }
 
     board.movePiece(fromRow, fromCol, toRow, toCol);
+    moveHistory.push(new MoveRecord(
+        new Position(fromRow, fromCol),
+        new Position(toRow, toCol),
+        pieceMoved,
+        pieceCaptured,
+        notation,
+        prevCR,
+        prevES));
 
     // *** AFTER A PIECE HAS MOVED *** //
     // check if it's the king moving 2 spaces to cue castling
@@ -246,4 +270,12 @@ public class GameService {
     return blackCaptures;
   }
 
+  public List<String> getMoveHistory() {
+    List<String> movesString = new ArrayList<>(moveHistory.size());
+
+    for (MoveRecord move : moveHistory) {
+      movesString.add(move.toString());
+    }
+    return movesString;
+  }
 }
