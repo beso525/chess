@@ -25,6 +25,9 @@ export class BoardComponent implements OnInit {
   gameStatus = signal<string>("ONGOING");
   whiteCaptures = signal<string[]>([]);
   blackCaptures = signal<string[]>([]);
+  moveHistory = signal<string[]>([]);
+
+  moveHistoryData = this.moveHistory.asReadonly();
 
   constructor(private api: ChessApiService, private audio: AudioService) { }
 
@@ -47,7 +50,6 @@ export class BoardComponent implements OnInit {
         const from = this.selected;
         this.selected = null;
         this.legalMoves.set([]);
-
         this.api.makeMove({
           fromRow: from.row,
           fromCol: from.col,
@@ -62,6 +64,8 @@ export class BoardComponent implements OnInit {
             this.gameStatus.set(res.gameStatus)
             this.whiteCaptures.set(res.whiteCaptures)
             this.blackCaptures.set(res.blackCaptures)
+            this.moveHistory.set(res.moveHistory)
+            console.log(res.moveHistory);
             if (res.pendingPromotion) {
               this.activeModal.set(true)
               this.promotionCol.set(res.promotionCol)
@@ -141,6 +145,7 @@ export class BoardComponent implements OnInit {
         this.promotionColor.set('')
         this.whiteCaptures.set([])
         this.blackCaptures.set([])
+        this.moveHistory.set([])
         this.gameReset.emit()
       },
       error: err => console.error(err, "err"),

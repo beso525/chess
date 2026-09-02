@@ -8,7 +8,9 @@
       </app-player-layout>
     </div>
   </div>
+  
   <app-board-component #board></app-board-component>
+  
   <div class="player-bottom">
     <div class="player-row-component">
       <app-player-layout 
@@ -18,7 +20,14 @@
         </app-player-layout>
     </div>
   </div>
+  
+</div>
+
+<div class="sidebar">
   <div>
-    <button class="restart-btn" (click)="board.resetBoard()">Reset Board</button>
+    <app-notations-component #notations [boardReference] = "board"></app-notations-component>
+    <div>
+      <button class="restart-btn" (click)="board.resetBoard()">Reset Board</button>
+    </div>
   </div>
 </div>

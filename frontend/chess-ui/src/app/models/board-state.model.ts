@@ -9,4 +9,5 @@ export interface BoardResponse {
   gameStatus: 'ONGOING' | 'CHECKMATE' | 'STALEMATE';
   whiteCaptures: string[];
   blackCaptures: string[];
+  moveHistory: string[];
 }
