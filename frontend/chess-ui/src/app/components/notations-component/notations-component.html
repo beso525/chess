@@ -3,12 +3,11 @@
     Play
   </div>
   <div class="notations-opening-name">
-    Opening name
   </div>
   <div class="notations-list">
-    <div class="moves-header"></div>
-    <div class="moves-header"></div>
-    <div class="moves-header"></div>
+    <div class="moves-header">#</div>
+    <div class="moves-header"><img src="assets/wK.png" alt="white king"/></div>
+    <div class="moves-header"><img src="assets/bK.png" alt="white king"/></div>
 
     @for (row of notationRows(); track row.turn) {
       <div class="turn-number">{{ row.turn }}.</div>

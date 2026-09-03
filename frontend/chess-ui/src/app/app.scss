@@ -30,8 +30,14 @@
 }
 
 .sidebar {
-  background-color: grey;
+  background: linear-gradient(45deg, #4a4e69 24%, #9a8c98 79%);
   padding: 2rem;
   margin: 0.5rem 1rem 0.5rem 2rem;
   width: 15%;
+  border-radius: 8px;
+  height: 5.5rem * 8;
+  overflow-y: auto;
+  scrollbar-color: rgba(0, 0, 0, .45) transparent;
+  scrollbar-width: thin;
+  transition: scrollbar-color 0.3s ease;
 }

@@ -2,12 +2,12 @@
   <div class="checkmate-modal">
     Checkmate!<br>{{ whiteTurn() ? 'Black' : 'White' }} wins! 
     <div>
-      <button class="restart-btn" (click)="resetBoard()">Reset Board</button>
+      <button class="restart-btn" (click)="resetBoard()">New Game</button>
   </div>
   </div>
 }
 @if (gameStatus() === 'STALEMATE') { 
-  <div class="stalemate-modal">Stalemate! =(</div>
+  <div class="stalemate-modal">Draw! <br/>By stalemate</div>
 }
 @if (activeModal()) {
   <div class="promotion-modal">

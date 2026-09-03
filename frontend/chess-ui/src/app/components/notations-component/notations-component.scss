@@ -13,16 +13,20 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 8px 0;
-  padding: 12px;
+  padding: 12px 0px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 14px;
 }
 
 .moves-header {
   font-weight: bold;
-  color: grey;
+  color: rgb(39, 38, 38);
   border-bottom: 1px solid black;
   padding-bottom: 4px;
+}
+
+.moves-header img {
+  width: 1.5rem;
 }
 
 .moves-number {
@@ -30,5 +34,5 @@
 }
 
 .move-cell {
-  padding-left: 4px;
+  padding-left: 5px;
 }
