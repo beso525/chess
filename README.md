@@ -20,9 +20,10 @@ I'm building it as a learning project to practice DSA, OOP, system design, and f
   - [x] En Passant
 - [x] UI and sounds
 - [x] Capture logic
+- [x] Back move and notations
 
 ### In Progress
-- [ ] Back move and notations
+- [ ] Polishing
 - [ ] Chess engine opponent  
   - [ ] Evaluation bar
 
@@ -44,5 +45,5 @@ I'm building this project in multiple phases
 - [x] **Phase 3**: Piece move generation and legal moves
 - [x] **Phase 4**: Full rule set, turn based
 - [x] **Phase 5**: Improving UI and adding sounds to moves
-- [ ] **Phase 6**: Adding notations and undo 
+- [x] **Phase 6**: Adding notations and undo 
 - [ ] **Phase 7**: Engine opponent

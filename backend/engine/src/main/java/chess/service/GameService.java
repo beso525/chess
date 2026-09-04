@@ -83,14 +83,12 @@ public class GameService {
     String pieceMoved = board.getPiece(fromRow, fromCol);
     String pieceCaptured = board.getPiece(toRow, toCol);
     NotationsGenerator notationsGenerator = new NotationsGenerator();
-    String notation = notationsGenerator.generateNotation(
-        new Position(fromRow, fromCol),
-        new Position(toRow, toCol),
-        pieceMoved, pieceCaptured, board);
+
     isCastling = false;
     String piece = board.getPiece(fromRow, fromCol);
     char color = piece.charAt(0);
     char type = piece.charAt(1);
+
     // check if king has moved
     if (type == 'K') {
       if (color == 'w')
@@ -112,6 +110,7 @@ public class GameService {
         if (fromCol == 0)
           blackQueenSideRookMoved = true;
       }
+
     }
 
     // check for promotion
@@ -131,14 +130,6 @@ public class GameService {
     }
 
     board.movePiece(fromRow, fromCol, toRow, toCol);
-    moveHistory.push(new MoveRecord(
-        new Position(fromRow, fromCol),
-        new Position(toRow, toCol),
-        pieceMoved,
-        pieceCaptured,
-        notation,
-        prevCR,
-        prevES));
 
     // *** AFTER A PIECE HAS MOVED *** //
     // check if it's the king moving 2 spaces to cue castling
@@ -168,6 +159,24 @@ public class GameService {
       board.getSquares()[capturedPawnRow][toCol] = null;
       capture(color, enPassantCapture);
     }
+
+    char opponentColor = (color == 'w') ? 'b' : 'w';
+    boolean isCheckMate = gameState.evaluate(opponentColor, board, prevCR, prevES) == GameStatus.CHECKMATE;
+    boolean isCheck = checkGenerator.isInCheck(opponentColor, board, prevCR, prevES);
+
+    String notation = notationsGenerator.generateNotation(
+        new Position(fromRow, fromCol),
+        new Position(toRow, toCol),
+        pieceMoved, pieceCaptured, board, isCheck, isCheckMate);
+
+    moveHistory.push(new MoveRecord(
+        new Position(fromRow, fromCol),
+        new Position(toRow, toCol),
+        pieceMoved,
+        pieceCaptured,
+        notation,
+        prevCR,
+        prevES));
   }
 
   public void capture(char capturingColor, String capturedPiece) {
