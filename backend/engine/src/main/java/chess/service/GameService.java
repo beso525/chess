@@ -46,10 +46,6 @@ public class GameService {
 
   private Deque<MoveRecord> moveHistory = new ArrayDeque<>();
 
-  public Board getBoard() {
-    return board;
-  }
-
   public GameService(CheckGenerator checkGenerator, GameState gameState) {
     this.checkGenerator = checkGenerator;
     this.gameState = gameState;
@@ -220,6 +216,10 @@ public class GameService {
   }
 
   // GETTERS
+  public Board getBoard() {
+    return board;
+  }
+
   public GameStatus getGameStatus() {
     char color = isWhiteTurn ? 'w' : 'b';
     return gameState.evaluate(color, getBoard(), getCastlingRights(), getEnPassantSquare());
