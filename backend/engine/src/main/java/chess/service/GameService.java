@@ -24,22 +24,7 @@ public class GameService {
   private final CheckGenerator checkGenerator;
   private final GameState gameState;
 
-  private boolean isWhiteTurn = true;
-
   private boolean pendingPromotion = false;
-  private int promotionRow = -1;
-  private int promotionCol = -1;
-
-  private boolean whiteKingMoved = false;
-  private boolean blackKingMoved = false;
-  private boolean blackKingSideRookMoved = false;
-  private boolean blackQueenSideRookMoved = false;
-  private boolean whiteKingSideRookMoved = false;
-  private boolean whiteQueenSideRookMoved = false;
-  private boolean isCastling = false;
-
-  private int enPassantCol = -1;
-  private int enPassantRow = -1;
 
   private List<String> whiteCaptures = new ArrayList<>();
   private List<String> blackCaptures = new ArrayList<>();
@@ -57,30 +42,29 @@ public class GameService {
 
   public void resetBoard() {
     board.resetStartingPosition();
-    isWhiteTurn = true;
     pendingPromotion = false;
-    promotionRow = -1;
-    promotionCol = -1;
-    whiteKingMoved = false;
-    blackKingMoved = false;
-    blackKingSideRookMoved = false;
-    blackQueenSideRookMoved = false;
-    whiteKingSideRookMoved = false;
-    whiteQueenSideRookMoved = false;
+    board.setPromotionRow(-1);
+    board.setPromotionCol(-1);
+    board.setWhiteKingMoved(false);
+    board.setBlackKingMoved(false);
+    board.setBlackKingSideRookMoved(false);
+    board.setBlackQueenSideRookMoved(false);
+    board.setWhiteKingSideRookMoved(false);
+    board.setWhiteQueenSideRookMoved(false);
     whiteCaptures.clear();
     blackCaptures.clear();
-    isCastling = false;
+    board.setIsCastling(false);
     moveHistory.clear();
   }
 
   public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {
-    CastlingRights prevCR = getCastlingRights();
-    EnPassantSquare prevES = getEnPassantSquare();
+    CastlingRights prevCR = board.getCastlingRights();
+    EnPassantSquare prevES = board.getEnPassantSquare();
     String pieceMoved = board.getPiece(fromRow, fromCol);
     String pieceCaptured = board.getPiece(toRow, toCol);
     NotationsGenerator notationsGenerator = new NotationsGenerator();
 
-    isCastling = false;
+    board.setIsCastling(false);
     String piece = board.getPiece(fromRow, fromCol);
     char color = piece.charAt(0);
     char type = piece.charAt(1);
@@ -88,23 +72,23 @@ public class GameService {
     // check if king has moved
     if (type == 'K') {
       if (color == 'w')
-        whiteKingMoved = true;
+        board.setWhiteKingMoved(true);
       else
-        blackKingMoved = true;
+        board.setBlackKingMoved(true);
     }
 
     // check if and which rooks have moved
     if (type == 'R') {
       if (color == 'w') {
         if (fromCol == 7)
-          whiteKingSideRookMoved = true;
+          board.setWhiteKingSideRookMoved(true);
         if (fromCol == 0)
-          whiteQueenSideRookMoved = true;
+          board.setWhiteQueenSideRookMoved(true);
       } else {
         if (fromCol == 7)
-          blackKingSideRookMoved = true;
+          board.setBlackKingSideRookMoved(true);
         if (fromCol == 0)
-          blackQueenSideRookMoved = true;
+          board.setBlackQueenSideRookMoved(true);
       }
 
     }
@@ -112,8 +96,8 @@ public class GameService {
     // check for promotion
     if ((color == 'w' && type == 'P' && toRow == 0)
         || (color == 'b' && type == 'P' && toRow == 7)) {
-      promotionRow = toRow;
-      promotionCol = toCol;
+      board.setPromotionRow(toRow);
+      board.setPromotionCol(toCol);
       pendingPromotion = true;
     }
 
@@ -129,8 +113,8 @@ public class GameService {
 
     // *** AFTER A PIECE HAS MOVED *** //
     // check if it's the king moving 2 spaces to cue castling
-    isCastling = type == 'K' && Math.abs(toCol - fromCol) == 2;
-    if (isCastling) {
+    board.setIsCastling(type == 'K' && Math.abs(toCol - fromCol) == 2);
+    if (board.getIsCastling()) {
       // where the rook moves if the king castled king side
       if (toCol == 6) {
         board.movePiece(fromRow, 7, fromRow, 5);
@@ -143,11 +127,11 @@ public class GameService {
 
     // check if the pawn that moved
     if (type == 'P' && Math.abs(toRow - fromRow) == 2) {
-      enPassantCol = toCol;
-      enPassantRow = (fromRow + toRow) / 2;
+      board.setEnPassantCol(toCol);
+      board.setEnPassantRow((fromRow + toRow) / 2);
     } else {
-      enPassantCol = -1;
-      enPassantRow = -1;
+      board.setEnPassantCol(-1);
+      board.setEnPassantRow(-1);
     }
     if (isEnPassant) {
       int capturedPawnRow = color == 'w' ? toRow + 1 : toRow - 1;
@@ -168,7 +152,7 @@ public class GameService {
         board,
         isCheck,
         isCheckMate,
-        getIsCastling());
+        board.getIsCastling());
 
     moveHistory.push(new MoveRecord(
         new Position(fromRow, fromCol),
@@ -180,6 +164,10 @@ public class GameService {
         prevES));
   }
 
+  private void undoMove() {
+
+  }
+
   public void capture(char capturingColor, String capturedPiece) {
     if (capturingColor == 'w') {
       whiteCaptures.add(capturedPiece);
@@ -188,92 +176,29 @@ public class GameService {
     }
   }
 
-  public boolean isWhiteTurn() {
-    return isWhiteTurn;
-  }
-
   public void promotePawn(int row, int col, String chosenPiece) {
     char color = board.getPiece(row, col).charAt(0);
     board.getSquares()[row][col] = color + chosenPiece;
     pendingPromotion = false;
-    promotionRow = -1;
-    promotionCol = -1;
-    isWhiteTurn = !isWhiteTurn;
-  }
-
-  public boolean isCorrectTurn(int fromRow, int fromCol) {
-    String piece = board.getPiece(fromRow, fromCol);
-    if (piece == null) {
-      return false;
-    }
-
-    char color = piece.charAt(0);
-    return (isWhiteTurn && color == 'w' || !isWhiteTurn && color == 'b');
-  }
-
-  public void flipTurn() {
-    isWhiteTurn = !isWhiteTurn;
+    board.setPromotionRow(-1);
+    board.setPromotionCol(-1);
+    board.flipTurn();
   }
 
   public boolean isPlayerInCheck() {
-    char kingColor = isWhiteTurn() ? 'w' : 'b';
-    return checkGenerator.isInCheck(kingColor, getBoard(), getCastlingRights(), getEnPassantSquare());
+    char kingColor = board.isWhiteTurn() ? 'w' : 'b';
+    return checkGenerator.isInCheck(kingColor, getBoard(), board.getCastlingRights(), board.getEnPassantSquare());
+  }
+
+  public GameStatus getGameStatus() {
+    char color = board.isWhiteTurn() ? 'w' : 'b';
+    return gameState.evaluate(color, getBoard(), board.getCastlingRights(),
+        board.getEnPassantSquare());
   }
 
   // GETTERS
   public Board getBoard() {
     return board;
-  }
-
-  public GameStatus getGameStatus() {
-    char color = isWhiteTurn ? 'w' : 'b';
-    return gameState.evaluate(color, getBoard(), getCastlingRights(), getEnPassantSquare());
-  }
-
-  public boolean getWhiteKingMoved() {
-    return whiteKingMoved;
-  }
-
-  public boolean getBlackKingMoved() {
-    return blackKingMoved;
-  }
-
-  public boolean getWhiteKingSideRookMoved() {
-    return whiteKingSideRookMoved;
-  }
-
-  public boolean getBlackKingSideRookMoved() {
-    return blackKingSideRookMoved;
-  }
-
-  public boolean getWhiteQueenSideRookMoved() {
-    return whiteQueenSideRookMoved;
-  }
-
-  public boolean getBlackQueenSideRookMoved() {
-    return blackQueenSideRookMoved;
-  }
-
-  public boolean getIsCastling() {
-    return isCastling;
-  }
-
-  public CastlingRights getCastlingRights() {
-    return new CastlingRights(
-        whiteKingMoved, whiteKingSideRookMoved, whiteQueenSideRookMoved,
-        blackKingMoved, blackKingSideRookMoved, blackQueenSideRookMoved);
-  }
-
-  public EnPassantSquare getEnPassantSquare() {
-    return new EnPassantSquare(enPassantRow, enPassantCol);
-  }
-
-  public int getPromotionRow() {
-    return promotionRow;
-  }
-
-  public int getPromotionCol() {
-    return promotionCol;
   }
 
   public List<String> getWhiteCaptures() {

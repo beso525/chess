@@ -26,9 +26,15 @@
   height: 5.5em * 8;
   overflow: hidden;
   overflow-y: scroll;
+  scroll-behavior: smooth;
   scrollbar-color: rgba(0, 0, 0, .45) transparent;
   scrollbar-width: thin;
   transition: scrollbar-color 0.3s ease;
+  overflow-anchor: auto;
+}
+
+.notations-list>*:last-child {
+  overflow-anchor: auto;
 }
 
 .moves-header {

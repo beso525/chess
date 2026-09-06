@@ -19,7 +19,9 @@ public class CheckGenerator {
     this.moveGenerator = moveGenerator;
   }
 
-  public boolean isInCheck(char kingColor, Board board, CastlingRights castlingRights,
+  public boolean isInCheck(char kingColor,
+      Board board,
+      CastlingRights castlingRights,
       EnPassantSquare enPassantSquare) {
     // getting king position
     Position kingPos = null;
@@ -38,7 +40,7 @@ public class CheckGenerator {
         String piece = board.getPiece(r, c);
         if (piece != null && piece.charAt(0) != kingColor) {
           // generate a list of all legal moves
-          List<Move> legalMoves = moveGenerator.genMove(new Position(r, c), board, null, enPassantSquare);
+          List<Move> legalMoves = moveGenerator.genMove(new Position(r, c), board, enPassantSquare);
           // comparing if there's overlap
           for (Move move : legalMoves) {
             if (move.getToPos().row == kingPos.row &&
@@ -52,7 +54,11 @@ public class CheckGenerator {
     return false;
   }
 
-  public boolean isSquareAttacked(int row, int col, char color, Board board, EnPassantSquare enPassantSquare) {
+  public boolean isSquareAttacked(int row,
+      int col,
+      char color,
+      Board board,
+      EnPassantSquare enPassantSquare) {
 
     Board tempBoard = board.copy();
 

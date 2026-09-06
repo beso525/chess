@@ -1,4 +1,4 @@
-import { Component, computed, Input } from '@angular/core';
+import { Component, computed, effect, ElementRef, Input, QueryList, ViewChild } from '@angular/core';
 import { BoardComponent } from '../board-component/board-component';
 
 interface MoveTurn {
@@ -16,6 +16,7 @@ interface MoveTurn {
 
 export class NotationsComponent {
   @Input() boardReference!: BoardComponent;
+  @ViewChild('scrollDown') scrollContainer!: ElementRef<HTMLDivElement>;
 
   notationRows = computed<MoveTurn[]>(() => {
     const moves = this.boardReference.moveHistory();
@@ -33,7 +34,20 @@ export class NotationsComponent {
     return rows;
   })
 
+  constructor() {
+    effect(() => {
+      const rows = this.notationRows();
+      setTimeout(() => this.scrollToBottom(), 0)
+    })
+  }
   addMove(move: string) {
     this.boardReference.moveHistory.update(prev => [...prev, move])
+  }
+
+  private scrollToBottom(): void {
+    if (this.scrollContainer) {
+      const element = this.scrollContainer.nativeElement;
+      element.scrollTop = element.scrollHeight;
+    }
   }
 }

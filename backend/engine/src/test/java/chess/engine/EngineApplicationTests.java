@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import chess.board.Board;
 import chess.model.CastlingRights;
 import chess.model.EnPassantSquare;
+import chess.movegen.CastlingMoveGenerator;
 import chess.movegen.CheckGenerator;
 import chess.movegen.LegalMovesFilter;
 import chess.movegen.MoveGenerator;
@@ -31,9 +32,10 @@ class EngineApplicationTests {
       }
     }
 
-    MoveGenerator moveGenerator = new MoveGenerator(null);
+    MoveGenerator moveGenerator = new MoveGenerator();
     CheckGenerator checkGenerator = new CheckGenerator(moveGenerator);
-    LegalMovesFilter legalMovesFilter = new LegalMovesFilter(moveGenerator, checkGenerator);
+    CastlingMoveGenerator castlingMoveGenerator = new CastlingMoveGenerator(checkGenerator);
+    LegalMovesFilter legalMovesFilter = new LegalMovesFilter(moveGenerator, checkGenerator, castlingMoveGenerator);
     gamestate = new GameState(legalMovesFilter, checkGenerator);
 
     castlingRights = new CastlingRights(true, true, true, true, true, true);

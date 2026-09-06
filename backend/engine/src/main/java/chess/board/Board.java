@@ -1,8 +1,27 @@
 package chess.board;
 
+import chess.model.CastlingRights;
+import chess.model.EnPassantSquare;
+
 public class Board {
 
   private String[][] squares = new String[8][8];
+
+  private int promotionRow = -1;
+  private int promotionCol = -1;
+
+  private boolean whiteKingMoved = false;
+  private boolean blackKingMoved = false;
+  private boolean blackKingSideRookMoved = false;
+  private boolean blackQueenSideRookMoved = false;
+  private boolean whiteKingSideRookMoved = false;
+  private boolean whiteQueenSideRookMoved = false;
+  private boolean isCastling = false;
+
+  private boolean isWhiteTurn = true;
+
+  private int enPassantCol = -1;
+  private int enPassantRow = -1;
 
   public Board() {
     startingPosition();
@@ -69,4 +88,112 @@ public class Board {
     return copy;
   }
 
+  public boolean isWhiteTurn() {
+    return isWhiteTurn;
+  }
+
+  public void flipTurn() {
+    isWhiteTurn = !isWhiteTurn;
+  }
+
+  public boolean isCorrectTurn(int fromRow, int fromCol) {
+    String piece = getPiece(fromRow, fromCol);
+    if (piece == null) {
+      return false;
+    }
+
+    char color = piece.charAt(0);
+    return (isWhiteTurn && color == 'w' || !isWhiteTurn && color == 'b');
+  }
+
+  // GETTERS AND SETTERS
+  public CastlingRights getCastlingRights() {
+    return new CastlingRights(
+        whiteKingMoved, whiteKingSideRookMoved, whiteQueenSideRookMoved,
+        blackKingMoved, blackKingSideRookMoved, blackQueenSideRookMoved);
+  }
+
+  public EnPassantSquare getEnPassantSquare() {
+    return new EnPassantSquare(enPassantRow, enPassantCol);
+  }
+
+  public boolean getIsCastling() {
+    return isCastling;
+  }
+
+  public void setIsCastling(boolean isCastling) {
+    this.isCastling = isCastling;
+  };
+
+  public int getPromotionRow() {
+    return promotionRow;
+  }
+
+  public void setPromotionRow(int promotionRow) {
+    this.promotionRow = promotionRow;
+  }
+
+  public int getPromotionCol() {
+    return promotionCol;
+  }
+
+  public void setPromotionCol(int promotionCol) {
+    this.promotionCol = promotionCol;
+  }
+
+  public boolean getWhiteKingMoved() {
+    return whiteKingMoved;
+  }
+
+  public void setWhiteKingMoved(boolean whiteKingMoved) {
+    this.whiteKingMoved = whiteKingMoved;
+  }
+
+  public boolean getBlackKingMoved() {
+    return blackKingMoved;
+  }
+
+  public void setBlackKingMoved(boolean blackKingMoved) {
+    this.blackKingMoved = blackKingMoved;
+  }
+
+  public boolean getWhiteKingSideRookMoved() {
+    return whiteKingSideRookMoved;
+  }
+
+  public void setWhiteKingSideRookMoved(boolean whiteKingSideRookMoved) {
+    this.whiteKingSideRookMoved = whiteKingSideRookMoved;
+  }
+
+  public boolean getBlackKingSideRookMoved() {
+    return blackKingSideRookMoved;
+  }
+
+  public void setBlackKingSideRookMoved(boolean blackKingSideRookMoved) {
+    this.blackKingSideRookMoved = blackKingSideRookMoved;
+  }
+
+  public boolean getWhiteQueenSideRookMoved() {
+    return whiteQueenSideRookMoved;
+  }
+
+  public void setWhiteQueenSideRookMoved(boolean whiteQueenSideRookMoved) {
+    this.whiteQueenSideRookMoved = whiteQueenSideRookMoved;
+  }
+
+  public boolean getBlackQueenSideRookMoved() {
+    return blackQueenSideRookMoved;
+  }
+
+  public void setBlackQueenSideRookMoved(boolean blackQueenSideRookMoved) {
+    this.blackQueenSideRookMoved = blackQueenSideRookMoved;
+  }
+
+  public void setEnPassantCol(int enPassantCol) {
+    this.enPassantCol = enPassantCol;
+  }
+
+  public void setEnPassantRow(int enPassantRow) {
+    this.enPassantRow = enPassantRow;
+  }
 }

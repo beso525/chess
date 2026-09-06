@@ -15,23 +15,35 @@ import chess.model.Position;
 public class LegalMovesFilter {
 
   private final MoveGenerator moveGenerator;
+  private final CastlingMoveGenerator castlingMoveGenerator;
   private final CheckGenerator checkGenerator;
 
-  public LegalMovesFilter(MoveGenerator moveGenerator, CheckGenerator checkGenerator) {
+  public LegalMovesFilter(MoveGenerator moveGenerator,
+      CheckGenerator checkGenerator,
+      CastlingMoveGenerator castlingMoveGenerator) {
     this.moveGenerator = moveGenerator;
+    this.castlingMoveGenerator = castlingMoveGenerator;
     this.checkGenerator = checkGenerator;
   }
 
-  public List<Move> filterLegalMoves(Position pos, Board board, CastlingRights castlingRights,
+  public List<Move> filterLegalMoves(Position pos,
+      Board board,
+      CastlingRights castlingRights,
       EnPassantSquare enPassantSquare) {
     // get all moves
-    if (board.getPiece(pos.row, pos.col) == null) {
+    String piece = board.getPiece(pos.row, pos.col);
+    if (piece == null) {
       return new ArrayList<>();
     }
-    List<Move> moves = moveGenerator.genMove(pos, board, castlingRights, enPassantSquare);
+
+    List<Move> moves = new ArrayList<>(moveGenerator.genMove(pos, board, enPassantSquare));
     List<Move> filteredMoves = new ArrayList<>();
+
     char color = board.getPiece(pos.row, pos.col).charAt(0);
     // for each move i need a copy of the board
+    if (piece.charAt(1) == 'K') {
+      moves.addAll(castlingMoveGenerator.genCastlingMoves(pos, board, castlingRights, enPassantSquare));
+    }
 
     for (Move move : moves) {
       Board boardCopy = board.copy();

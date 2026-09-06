@@ -3,11 +3,9 @@ package chess.movegen;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import chess.board.Board;
-import chess.model.CastlingRights;
 import chess.model.EnPassantSquare;
 import chess.model.Move;
 import chess.model.Position;
@@ -15,19 +13,13 @@ import chess.model.Position;
 @Component
 public class MoveGenerator {
 
-  private final CheckGenerator checkGenerator;
-
-  public MoveGenerator(@Lazy CheckGenerator checkGenerator) {
-    this.checkGenerator = checkGenerator;
-  }
-
-  public List<Move> genMove(Position pos, Board board, CastlingRights castlingRights, EnPassantSquare es) {
+  public List<Move> genMove(Position pos, Board board, EnPassantSquare es) {
     String piece = board.getPiece(pos.row, pos.col);
     char type = piece.charAt(1);
 
     return switch (type) {
       case 'K' ->
-        genKingMoves(pos, board, castlingRights, es);
+        genKingMoves(pos, board);
       case 'Q' ->
         genQueenMoves(pos, board);
       case 'R' ->
@@ -43,7 +35,7 @@ public class MoveGenerator {
     };
   }
 
-  private List<Move> genKingMoves(Position pos, Board board, CastlingRights castlingRights, EnPassantSquare es) {
+  private List<Move> genKingMoves(Position pos, Board board) {
     ArrayList<Move> kingMoves = new ArrayList<>();
     char color = board.getPiece(pos.row, pos.col).charAt(0);
 
@@ -67,7 +59,6 @@ public class MoveGenerator {
           new Position(pos.row, pos.col),
           new Position(toRow, toCol)));
     }
-    kingMoves.addAll(genCastlingMoves(pos, board, castlingRights, es));
     return kingMoves;
   }
 
@@ -239,45 +230,6 @@ public class MoveGenerator {
   }
 
   // special moves
-  private List<Move> genCastlingMoves(Position pos, Board board, CastlingRights cr, EnPassantSquare es) {
-    if (cr == null)
-      return new ArrayList<>();
-    ArrayList<Move> castlingMoves = new ArrayList<>();
-    char color = board.getPiece(pos.row, pos.col).charAt(0);
-    int row = pos.row;
-
-    boolean kingMoved = (color == 'w') ? cr.whiteKingMoved : cr.blackKingMoved;
-    if (kingMoved)
-      return castlingMoves;
-
-    // kingside castling
-    boolean kingSideRookMoved = (color == 'w') ? cr.whiteKingSideRookMoved : cr.blackKingSideRookMoved;
-    if (!kingSideRookMoved
-        && board.getPiece(row, 7) != null
-        && board.getPiece(row, 7).charAt(1) == 'R'
-        && board.isEmpty(row, 5)
-        && board.isEmpty(row, 6)
-        && !checkGenerator.isSquareAttacked(row, 6, color, board, es)
-        && !checkGenerator.isSquareAttacked(row, 5, color, board, es)
-        && !checkGenerator.isInCheck(color, board, cr, es)) {
-      castlingMoves.add(new Move(pos, new Position(row, 6)));
-    }
-
-    // queenside castling
-    boolean queenSideRookMoved = (color == 'w') ? cr.whiteQueenSideRookMoved : cr.blackQueenSideRookMoved;
-    if (!queenSideRookMoved
-        && board.getPiece(row, 0) != null
-        && board.getPiece(row, 0).charAt(1) == 'R'
-        && board.isEmpty(row, 1)
-        && board.isEmpty(row, 2)
-        && board.isEmpty(row, 3)
-        && !checkGenerator.isSquareAttacked(row, 2, color, board, es)
-        // && !checkGenerator.isSquareAttacked(row, 3, color, board, es)
-        && !checkGenerator.isInCheck(color, board, cr, es)) {
-      castlingMoves.add(new Move(pos, new Position(row, 2)));
-    }
-    return castlingMoves;
-  }
 
   private List<Move> genEnPassantMoves(Position pos, Board board, EnPassantSquare es) {
     List<Move> enPassantMoves = new ArrayList<>();

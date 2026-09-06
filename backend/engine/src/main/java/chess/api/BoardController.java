@@ -42,12 +42,12 @@ public class BoardController {
   public BoardResponse getBoard() {
     return new BoardResponse(
         gameService.getBoard().getSquares(),
-        gameService.isWhiteTurn(),
+        gameService.getBoard().isWhiteTurn(),
         gameService.isPendingPromotion(),
-        gameService.getIsCastling(),
+        gameService.getBoard().getIsCastling(),
         gameService.isPlayerInCheck(),
-        gameService.getPromotionRow(),
-        gameService.getPromotionCol(),
+        gameService.getBoard().getPromotionRow(),
+        gameService.getBoard().getPromotionCol(),
         gameService.getGameStatus(),
         gameService.getWhiteCaptures(),
         gameService.getBlackCaptures(),
@@ -56,23 +56,23 @@ public class BoardController {
 
   @PostMapping("/move")
   public ResponseEntity<BoardResponse> makeMove(@RequestBody MoveRequest move) {
-    if (!gameService.isCorrectTurn(move.getFromRow(), move.getFromCol())) {
+    if (!gameService.getBoard().isCorrectTurn(move.getFromRow(), move.getFromCol())) {
       return ResponseEntity.badRequest().build();
     }
     gameService.makeMove(move.getFromRow(), move.getFromCol(), move.getToRow(), move.getToCol());
     if (!gameService.isPendingPromotion()) {
-      gameService.flipTurn();
+      gameService.getBoard().flipTurn();
     }
 
     return ResponseEntity.ok(
         new BoardResponse(
             gameService.getBoard().getSquares(),
-            gameService.isWhiteTurn(),
+            gameService.getBoard().isWhiteTurn(),
             gameService.isPendingPromotion(),
-            gameService.getIsCastling(),
+            gameService.getBoard().getIsCastling(),
             gameService.isPlayerInCheck(),
-            gameService.getPromotionRow(),
-            gameService.getPromotionCol(),
+            gameService.getBoard().getPromotionRow(),
+            gameService.getBoard().getPromotionCol(),
             gameService.getGameStatus(),
             gameService.getWhiteCaptures(),
             gameService.getBlackCaptures(),
@@ -86,8 +86,8 @@ public class BoardController {
     List<Move> moves = legalMovesFilter.filterLegalMoves(
         new Position(row, col),
         gameService.getBoard(),
-        gameService.getCastlingRights(),
-        gameService.getEnPassantSquare());
+        gameService.getBoard().getCastlingRights(),
+        gameService.getBoard().getEnPassantSquare());
 
     return moves.stream()
         .map(m -> {
@@ -104,12 +104,12 @@ public class BoardController {
     return ResponseEntity.ok(
         new BoardResponse(
             gameService.getBoard().getSquares(),
-            gameService.isWhiteTurn(),
+            gameService.getBoard().isWhiteTurn(),
             gameService.isPendingPromotion(),
-            gameService.getIsCastling(),
+            gameService.getBoard().getIsCastling(),
             gameService.isPlayerInCheck(),
-            gameService.getPromotionRow(),
-            gameService.getPromotionCol(),
+            gameService.getBoard().getPromotionRow(),
+            gameService.getBoard().getPromotionCol(),
             gameService.getGameStatus(),
             gameService.getWhiteCaptures(),
             gameService.getBlackCaptures(),
@@ -122,12 +122,12 @@ public class BoardController {
     return ResponseEntity.ok(
         new BoardResponse(
             gameService.getBoard().getSquares(),
-            gameService.isWhiteTurn(),
+            gameService.getBoard().isWhiteTurn(),
             gameService.isPendingPromotion(),
-            gameService.getIsCastling(),
+            gameService.getBoard().getIsCastling(),
             gameService.isPlayerInCheck(),
-            gameService.getPromotionRow(),
-            gameService.getPromotionCol(),
+            gameService.getBoard().getPromotionRow(),
+            gameService.getBoard().getPromotionCol(),
             gameService.getGameStatus(),
             gameService.getWhiteCaptures(),
             gameService.getBlackCaptures(),
