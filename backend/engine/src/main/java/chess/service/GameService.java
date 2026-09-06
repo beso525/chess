@@ -163,7 +163,12 @@ public class GameService {
     String notation = notationsGenerator.generateNotation(
         new Position(fromRow, fromCol),
         new Position(toRow, toCol),
-        pieceMoved, pieceCaptured, board, isCheck, isCheckMate);
+        pieceMoved,
+        pieceCaptured,
+        board,
+        isCheck,
+        isCheckMate,
+        getIsCastling());
 
     moveHistory.push(new MoveRecord(
         new Position(fromRow, fromCol),

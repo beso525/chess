@@ -8,14 +8,27 @@
   align-self: center;
 }
 
-.notations-list {
-  flex: 1;
+.moves-header {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 8px 0;
   padding: 12px 0px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 14px;
+}
+
+
+.notations-list {
+  display: flex;
+  margin: 10px 0;
+  gap: 5px;
+  flex-direction: column;
+  height: 5.5em * 8;
+  overflow: hidden;
+  overflow-y: scroll;
+  scrollbar-color: rgba(0, 0, 0, .45) transparent;
+  scrollbar-width: thin;
+  transition: scrollbar-color 0.3s ease;
 }
 
 .moves-header {
@@ -34,5 +47,11 @@
 }
 
 .move-cell {
+
   padding-left: 5px;
+}
+
+.move-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }

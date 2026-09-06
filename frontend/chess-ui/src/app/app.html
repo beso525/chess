@@ -24,10 +24,8 @@
 </div>
 
 <div class="sidebar">
+  <app-notations-component #notations [boardReference] = "board"></app-notations-component>
   <div>
-    <app-notations-component #notations [boardReference] = "board"></app-notations-component>
-    <div>
-      <button class="restart-btn" (click)="board.resetBoard()">Reset Board</button>
-    </div>
+    <button class="restart-btn" (click)="board.resetBoard()">Reset Board</button>
   </div>
 </div>
