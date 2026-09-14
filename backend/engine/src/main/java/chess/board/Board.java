@@ -16,8 +16,6 @@ public class Board {
   private boolean whiteKingSideRookMoved = false;
   private boolean whiteQueenSideRookMoved = false;
 
-  private boolean isWhiteTurn = true;
-
   private int enPassantCol = -1;
   private int enPassantRow = -1;
 
@@ -49,7 +47,6 @@ public class Board {
     blackQueenSideRookMoved = false;
     whiteKingSideRookMoved = false;
     whiteQueenSideRookMoved = false;
-    isWhiteTurn = true;
     enPassantCol = -1;
     enPassantRow = -1;
     startingPosition();
@@ -153,6 +150,11 @@ public class Board {
     return squares[row][col].charAt(0) != myColor;
   }
 
+  public void promotePawn(int row, int col, String chosenPiece) {
+    char color = getPiece(row, col).charAt(0);
+    getSquares()[row][col] = color + chosenPiece;
+  }
+
   public Board copy() {
     Board copy = new Board();
     for (int r = 0; r < 8; r++) {
@@ -161,24 +163,6 @@ public class Board {
       }
     }
     return copy;
-  }
-
-  public boolean isWhiteTurn() {
-    return isWhiteTurn;
-  }
-
-  public void flipTurn() {
-    isWhiteTurn = !isWhiteTurn;
-  }
-
-  public boolean isCorrectTurn(int fromRow, int fromCol) {
-    String piece = getPiece(fromRow, fromCol);
-    if (piece == null) {
-      return false;
-    }
-
-    char color = piece.charAt(0);
-    return (isWhiteTurn && color == 'w' || !isWhiteTurn && color == 'b');
   }
 
   public CastlingRights getCastlingRights() {

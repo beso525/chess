@@ -29,6 +29,10 @@ public class GameService {
   private int promotionCol = -1;
   private int promotionRow = -1;
 
+  private boolean isCastling = false;
+
+  private boolean isWhiteTurn = true;
+
   private List<String> whiteCaptures = new ArrayList<>();
   private List<String> blackCaptures = new ArrayList<>();
   private boolean pendingPromotion = false;
@@ -51,6 +55,7 @@ public class GameService {
     promotionCol = -1;
     whiteCaptures.clear();
     blackCaptures.clear();
+    isWhiteTurn = true;
     moveHistory.clear();
   }
 
@@ -106,10 +111,11 @@ public class GameService {
 
     boolean isCheckMate = gameState.evaluate(opponentColor, board, prevCR, prevES) == GameStatus.CHECKMATE;
     boolean isCheck = checkGenerator.isInCheck(opponentColor, board, prevCR, prevES);
+    boolean wasCastling = moveResult.isCastling();
 
     String notation = notationsGenerator.generateNotation(
         from, to, pieceMoved, pieceCaptured, board,
-        isCheck, isCheckMate, moveResult.isCastling());
+        isCheck, isCheckMate, wasCastling);
 
     moveHistory.push(new MoveRecord(from, to, pieceMoved, pieceCaptured, notation, prevCR, prevES));
   }
@@ -123,19 +129,36 @@ public class GameService {
   }
 
   public void promotePawn(int row, int col, String chosenPiece) {
-    char color = board.getPiece(row, col).charAt(0);
-    board.getSquares()[row][col] = color + chosenPiece;
+    board.promotePawn(row, col, chosenPiece);
     pendingPromotion = false;
-    board.flipTurn();
+    flipTurn();
+  }
+
+  public boolean isWhiteTurn() {
+    return isWhiteTurn;
+  }
+
+  public void flipTurn() {
+    isWhiteTurn = !isWhiteTurn;
+  }
+
+  public boolean isCorrectTurn(Position from) {
+    String piece = board.getPiece(from.row, from.col);
+    if (piece == null) {
+      return false;
+    }
+
+    char color = piece.charAt(0);
+    return (isWhiteTurn && color == 'w' || !isWhiteTurn && color == 'b');
   }
 
   public boolean isPlayerInCheck() {
-    char kingColor = board.isWhiteTurn() ? 'w' : 'b';
+    char kingColor = isWhiteTurn() ? 'w' : 'b';
     return checkGenerator.isInCheck(kingColor, getBoard(), board.getCastlingRights(), board.getEnPassantSquare());
   }
 
   public GameStatus getGameStatus() {
-    char color = board.isWhiteTurn() ? 'w' : 'b';
+    char color = isWhiteTurn() ? 'w' : 'b';
     return gameState.evaluate(color, getBoard(), board.getCastlingRights(),
         board.getEnPassantSquare());
   }
@@ -168,5 +191,9 @@ public class GameService {
       movesString.add(move.toString());
     }
     return movesString;
+  }
+
+  public boolean getIsCastling() {
+    return isCastling;
   }
 }
