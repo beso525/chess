@@ -2,13 +2,12 @@ package chess.board;
 
 import chess.model.CastlingRights;
 import chess.model.EnPassantSquare;
+import chess.model.MoveResult;
+import chess.model.Position;
 
 public class Board {
 
   private String[][] squares = new String[8][8];
-
-  private int promotionRow = -1;
-  private int promotionCol = -1;
 
   private boolean whiteKingMoved = false;
   private boolean blackKingMoved = false;
@@ -16,9 +15,6 @@ public class Board {
   private boolean blackQueenSideRookMoved = false;
   private boolean whiteKingSideRookMoved = false;
   private boolean whiteQueenSideRookMoved = false;
-  private boolean isCastling = false;
-
-  private boolean isWhiteTurn = true;
 
   private int enPassantCol = -1;
   private int enPassantRow = -1;
@@ -45,11 +41,87 @@ public class Board {
         squares[i][j] = null;
       }
     }
+    whiteKingMoved = false;
+    blackKingMoved = false;
+    blackKingSideRookMoved = false;
+    blackQueenSideRookMoved = false;
+    whiteKingSideRookMoved = false;
+    whiteQueenSideRookMoved = false;
+    enPassantCol = -1;
+    enPassantRow = -1;
     startingPosition();
   }
 
   public String[][] getSquares() {
     return squares;
+  }
+
+  public MoveResult applyMove(Position from, Position to) {
+    String piece = getPiece(from.row, from.col);
+    char color = piece.charAt(0);
+    char type = piece.charAt(1);
+
+    String pieceCaptured = getPiece(to.row, to.col);
+    boolean isEnPassant = type == 'P' && from.col != to.col && getPiece(to.row, to.col) == null;
+    String enPassantCapture = null;
+    boolean pendingPromotion = false;
+
+    // check if king has moved
+    if (type == 'K') {
+      if (color == 'w')
+        whiteKingMoved = true;
+      else
+        blackKingMoved = true;
+    }
+
+    // check if and which rooks have moved
+    if (type == 'R') {
+      if (color == 'w') {
+        if (from.col == 7)
+          whiteKingSideRookMoved = true;
+        if (from.col == 0)
+          whiteQueenSideRookMoved = true;
+      } else {
+        if (from.col == 7)
+          blackKingSideRookMoved = true;
+        if (from.col == 0)
+          blackQueenSideRookMoved = true;
+      }
+
+    }
+
+    movePiece(from.row, from.col, to.row, to.col);
+    boolean isCastling = type == 'K' && Math.abs(to.col - from.col) == 2;
+    if (isCastling) {
+      // where the rook moves if the king castled king side
+      if (to.col == 6) {
+        movePiece(from.row, 7, from.row, 5);
+      }
+      // and where it moves if the king castled queen side
+      if (to.col == 2) {
+        movePiece(from.row, 0, from.row, 3);
+      }
+    }
+
+    // check if the pawn that moved
+    if (type == 'P' && Math.abs(to.row - from.row) == 2) {
+      enPassantCol = to.col;
+      enPassantRow = (from.row + to.row) / 2;
+    } else {
+      enPassantCol = -1;
+      enPassantRow = -1;
+    }
+    if (isEnPassant) {
+      int capturedPawnRow = color == 'w' ? to.row + 1 : to.row - 1;
+      enPassantCapture = getPiece(capturedPawnRow, to.col);
+      getSquares()[capturedPawnRow][to.col] = null;
+    }
+
+    if ((color == 'w' && type == 'P' && to.row == 0)
+        || (color == 'b' && type == 'P' && to.row == 7)) {
+      pendingPromotion = true;
+    }
+    return new MoveResult(from, to, isCastling, piece, pieceCaptured, enPassantCapture, pendingPromotion);
   }
 
   public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
@@ -78,6 +150,11 @@ public class Board {
     return squares[row][col].charAt(0) != myColor;
   }
 
+  public void promotePawn(int row, int col, String chosenPiece) {
+    char color = getPiece(row, col).charAt(0);
+    getSquares()[row][col] = color + chosenPiece;
+  }
+
   public Board copy() {
     Board copy = new Board();
     for (int r = 0; r < 8; r++) {
@@ -88,25 +165,6 @@ public class Board {
     return copy;
   }
 
-  public boolean isWhiteTurn() {
-    return isWhiteTurn;
-  }
-
-  public void flipTurn() {
-    isWhiteTurn = !isWhiteTurn;
-  }
-
-  public boolean isCorrectTurn(int fromRow, int fromCol) {
-    String piece = getPiece(fromRow, fromCol);
-    if (piece == null) {
-      return false;
-    }
-
-    char color = piece.charAt(0);
-    return (isWhiteTurn && color == 'w' || !isWhiteTurn && color == 'b');
-  }
-
-  // GETTERS AND SETTERS
   public CastlingRights getCastlingRights() {
     return new CastlingRights(
         whiteKingMoved, whiteKingSideRookMoved, whiteQueenSideRookMoved,
@@ -117,83 +175,4 @@ public class Board {
     return new EnPassantSquare(enPassantRow, enPassantCol);
   }
 
-  public boolean getIsCastling() {
-    return isCastling;
-  }
-
-  public void setIsCastling(boolean isCastling) {
-    this.isCastling = isCastling;
-  };
-
-  public int getPromotionRow() {
-    return promotionRow;
-  }
-
-  public void setPromotionRow(int promotionRow) {
-    this.promotionRow = promotionRow;
-  }
-
-  public int getPromotionCol() {
-    return promotionCol;
-  }
-
-  public void setPromotionCol(int promotionCol) {
-    this.promotionCol = promotionCol;
-  }
-
-  public boolean getWhiteKingMoved() {
-    return whiteKingMoved;
-  }
-
-  public void setWhiteKingMoved(boolean whiteKingMoved) {
-    this.whiteKingMoved = whiteKingMoved;
-  }
-
-  public boolean getBlackKingMoved() {
-    return blackKingMoved;
-  }
-
-  public void setBlackKingMoved(boolean blackKingMoved) {
-    this.blackKingMoved = blackKingMoved;
-  }
-
-  public boolean getWhiteKingSideRookMoved() {
-    return whiteKingSideRookMoved;
-  }
-
-  public void setWhiteKingSideRookMoved(boolean whiteKingSideRookMoved) {
-    this.whiteKingSideRookMoved = whiteKingSideRookMoved;
-  }
-
-  public boolean getBlackKingSideRookMoved() {
-    return blackKingSideRookMoved;
-  }
-
-  public void setBlackKingSideRookMoved(boolean blackKingSideRookMoved) {
-    this.blackKingSideRookMoved = blackKingSideRookMoved;
-  }
-
-  public boolean getWhiteQueenSideRookMoved() {
-    return whiteQueenSideRookMoved;
-  }
-
-  public void setWhiteQueenSideRookMoved(boolean whiteQueenSideRookMoved) {
-    this.whiteQueenSideRookMoved = whiteQueenSideRookMoved;
-  }
-
-  public boolean getBlackQueenSideRookMoved() {
-    return blackQueenSideRookMoved;
-  }
-
-  public void setBlackQueenSideRookMoved(boolean blackQueenSideRookMoved) {
-    this.blackQueenSideRookMoved = blackQueenSideRookMoved;
-  }
-
-  public void setEnPassantCol(int enPassantCol) {
-    this.enPassantCol = enPassantCol;
-  }
-
-  public void setEnPassantRow(int enPassantRow) {
-    this.enPassantRow = enPassantRow;
-  }
 }

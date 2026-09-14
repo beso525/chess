@@ -76,7 +76,6 @@ public class NotationsGenerator {
       notation.append("+");
     }
 
-    System.out.println(notation);
     return notation.toString();
   }
 }
