@@ -3,7 +3,6 @@ package chess.engine;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import chess.board.Board;
 import chess.model.CastlingRights;
@@ -15,8 +14,7 @@ import chess.movegen.MoveGenerator;
 import chess.rules.GameState;
 import chess.rules.GameStatus;
 
-@SpringBootTest
-class EngineApplicationTests {
+class GameStateTest {
 
   private Board board;
   private GameState gamestate;
@@ -43,13 +41,35 @@ class EngineApplicationTests {
   }
 
   @Test
-  void checkingForStaleMate() {
+  void checkingForStalemate() {
     board.getSquares()[0][0] = "wK";
 
     board.getSquares()[1][2] = "bQ";
     board.getSquares()[2][1] = "bK";
 
     GameStatus status = gamestate.evaluate('w', board, castlingRights, enPassantSquare);
+    assertEquals(GameStatus.STALEMATE, status);
+  }
+
+  @Test
+  void checkingForCheckMate() {
+    board.getSquares()[0][0] = "wK";
+    board.getSquares()[0][2] = "bR";
+    board.getSquares()[1][2] = "bR";
+    board.getSquares()[7][7] = "bK";
+
+    GameStatus status = gamestate.evaluate('w', board, castlingRights, enPassantSquare);
     assertEquals(GameStatus.CHECKMATE, status);
+  }
+
+  @Test
+  void checkingForOngoingGames() {
+    board.getSquares()[0][0] = "wK";
+    board.getSquares()[4][4] = "bR";
+    board.getSquares()[5][5] = "bR";
+    board.getSquares()[7][7] = "bK";
+
+    GameStatus status = gamestate.evaluate('w', board, castlingRights, enPassantSquare);
+    assertEquals(GameStatus.ONGOING, status);
   }
 }

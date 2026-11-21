@@ -18,9 +18,6 @@ public class NotationsGenerator {
     int rank = 8 - to.row;
 
     StringBuilder notation = new StringBuilder();
-    // check for castling
-    // check for side
-    // return castling notation depending on the castling
     String pieceType = switch (type) {
       case 'P' -> "P";
       case 'K' -> "K";

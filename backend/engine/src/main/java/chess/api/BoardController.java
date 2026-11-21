@@ -37,7 +37,7 @@ public class BoardController {
 
   private BoardResponse buildResponse() {
     return new BoardResponse(
-        gameService.getBoard().getSquares(),
+        gameService.getSquares(),
         gameService.isWhiteTurn(),
         gameService.isPendingPromotion(),
         gameService.getIsCastling(),

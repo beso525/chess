@@ -196,4 +196,8 @@ public class GameService {
   public boolean getIsCastling() {
     return isCastling;
   }
+
+  public String[][] getSquares() {
+    return getBoard().getSquares();
+  }
 }
